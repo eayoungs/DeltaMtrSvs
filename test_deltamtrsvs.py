@@ -40,7 +40,7 @@ def test_get_bldg_models():
                                                             headers)
 
         assert type(valBldgIDs) == tp.ListType
-        assert len(valBldgIDs) > 0
+        assert len(valBldgIDs) >= len(valBldgIDs)
         assert [type(valBldgID)==tp.StringType for valBldgID in valBldgIDs]
         assert [re.match('\d{4}', valBldgID) for valBldgID in valBldgIDs]
 
@@ -57,7 +57,7 @@ def test_get_model_comparisons():
                                                                 headers)
 
         assert type(modelIDs) == tp.ListType
-        assert len(modelIDs) > 0
-        assert [type(modelID)==tp.StringType for modelID in valBldgIDs]
+        assert len(modelIDs) == 2*len(valBldgIDs)
+        assert [type(modelID)==tp.StringType for modelID in modelIDs]
         assert [re.match('\d{4}', modelID) for modelID in modelIDs]
 
