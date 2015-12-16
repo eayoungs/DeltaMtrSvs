@@ -3,7 +3,7 @@
 __author__ = "Eric Allen Youngson"
 __email__ = "eric@scneco.com"
 __copyright__ = "Copyright 2015, Succession Ecological Services"
-__license__ = "GPLv3"
+__license__ = "GNU Affero (GPLv3)"
 
 """ This module provides functions for requesting results from the DeltaMeter
     Services API * deltameterservices.com * """
