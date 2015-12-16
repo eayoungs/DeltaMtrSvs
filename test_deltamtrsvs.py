@@ -11,7 +11,6 @@ __license__ = "GNU Affero (GPLv3)"
 import deltamtrsvs as dms_api
 import private as pvt
 import types as tp
-import pandas as pd
 import re
 
 
@@ -62,27 +61,3 @@ def test_get_model_comparisons():
         assert [type(modelID)==tp.StringType for modelID in valBldgIDs]
         assert [re.match('\d{4}', modelID) for modelID in modelIDs]
 
-def test_am_saves_results():
-    """ Pass the results of get_model_comparisons to the am_saves_results 
-        function and produce requested results for the 'America Saves!'
-        program in the agreed upon format """
-
-    for site in sites:
-        bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site,
-                                                headers)
-        (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
-                                                            headers)
-        (modelIDs, comparisons) = dms_api.get_model_comparisons(comparison_url,
-                                                                json_models,
-                                                                headers)
-
-        compLen = len(comparisons)
-        usesDf = dms_api.am_saves_results(comparisons)
-
-        fname = site+'-results.csv'
-        with open(fname, 'wb') as outf:
-            outcsv = usesDf.to_csv(fname)
-
-    assert isinstance(usesDf, pd.DataFrame)
-    assert usesDf.shape[1] == 7
-    assert usesDf.shape[0] == compLen
