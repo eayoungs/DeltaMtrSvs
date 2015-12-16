@@ -21,7 +21,7 @@ comparison_url = pvt.comparison_url
 sites = [pvt.FDL, pvt.HJSMS, pvt.Midlesboro]
 
 def test_get_property_bldg_IDs():
-    """ Pass a sites[0] id & header, confirm the fuction returns the expected bldg IDs """
+    """ Pass an API URL, property id & header; confirm the fuction returns the expected bldg IDs """
     for site in sites:
         bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)
     
@@ -45,8 +45,8 @@ def test_get_bldg_models():
         assert [re.match('\d{4}', valBldgID) for valBldgID in valBldgIDs]
 
 def test_get_model_comparisons():
-    """ Pass a list of bldg ids & header, confirm the fuction returns the
-        expected valid bldg IDs """
+    """ Pass a list of models' data, confirm the fuction returns the expected
+        modoel IDs """
 
     for site in sites:
         bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)

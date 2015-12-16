@@ -24,8 +24,9 @@ sites = [pvt.FDL, pvt.HJSMS, pvt.Midlesboro]
 
 def test_am_saves_results():
     """ Pass the results of get_model_comparisons to the am_saves_results 
-        function and produce requested results for the 'America Saves!'
-        program in the agreed upon format """
+        function, confirm DataFrame returned in requested results format for
+        the 'America Saves!' program (write contents to .CSV file for review)
+        """
 
     for site in sites:
         bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site,
