@@ -3,12 +3,12 @@
 __author__ = "Eric Allen Youngson"
 __email__ = "eric@scneco.com"
 __copyright__ = "Copyright 2015, Succession Ecological Services"
-__license__ = "GPLv3"
+__license__ = "GNU Affero (GPLv3)"
 
 """ This module provides functions for requesting results from the DeltaMeter
     Services API * deltameterservices.com * """
 
-import deltametersvs_api as dms_api
+import deltamtrsvs as dms_api
 import private as pvt
 import types as tp
 import pandas as pd
