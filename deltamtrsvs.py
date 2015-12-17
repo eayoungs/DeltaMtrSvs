@@ -23,7 +23,7 @@ def get_property_bldg_IDs(properties_url, site, headers):
 
 def get_bldg_models(model_url, bldgIDs, headers):
     """ Pass a list of building IDs; return a list of building IDs for
-        which there valid data is available, and the data in .JSON format. """
+        which valid data is available, and the data in .JSON format. """
 
     json_models = []
     valBldgIDs = []
