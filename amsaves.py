@@ -43,3 +43,32 @@ def am_saves_results(comparisons):
         usesDf = pd.DataFrame(data=uses, columns=names)
 
     return usesDf
+
+def am_saves_audit(refModels):
+
+    for refModel in refModels:
+        elecUsage = []
+        gasUsage = []
+        for jsonAudit in jsonAudits:
+            values = jsonAudit['TotalUnitsUsed']
+            unitOfMeasure = jsonAudit['UnitOfMeasure']
+            periodStartDate = str(jsonAudit['PeriodStartDate'])
+            periodEndDate = str(jsonAudit['PeriodEndDate'])
+            hrsInPeriod = jsonAudit['DaysInPeriod']*24
+            pwrDensity = jsonAudit['ElecWattsPerFt2']
+            airTemp = jsonAudit['AirTemp']
+                
+            if jsonAudit['UnitOfMeasure'] == 'KWH':
+                elecUsage.append([values, unitOfMeasure, pwrDensity,
+                                 periodStartDate, periodEndDate, hrsInPeriod,
+                                 airTemp])
+            elif jsonAudit['UnitOfMeasure'] == 'THERM':
+                gasUsage.append([values, unitOfMeasure, pwrDensity,
+                                periodStartDate, periodEndDate, hrsInPeriod,
+                                airTemp])
+        
+        gasUsageDf = pd.DataFrame(data=gasUsage, columns=names)
+        elecUsageDf = pd.DataFrame(data=elecUsage, columns=names)
+        combinedUsageDf = pd.concat([gasUsageDf, elecUsageDf], axis=1)
+
+    return combinedUsageDf        
