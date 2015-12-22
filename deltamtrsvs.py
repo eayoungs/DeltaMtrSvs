@@ -59,11 +59,11 @@ def get_model_audits(audit_url, modelIDs, headers):
     """ Pass a list of model IDs; return audit IDs and a list of audit data
         objects in .JSON format. """
 
-    refModels = modelIDs[::2]
+    refModelIDs = modelIDs[::2]
 
-    for refModel in refModels:
-        audit_endpt = audit_url + refModel
-        audit = requests.get(audit_url, headers=headers)
-        jsonAudits = audit.json()
+    audits = []
+    for refModelID in refModelIDs:
+        audit_endpt = audit_url + refModelID
+        audits.append(requests.get(audit_endpt, headers=headers))
 
-    return (refModels, jsonAudits)
+    return (refModelIDs, audits)

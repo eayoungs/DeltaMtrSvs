@@ -70,7 +70,7 @@ def test_get_model_audits():
         (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
                                                             headers)
 
-        (refModels, jsonAudits) = dms_api.get_model_audits(audit_url,
+        (refModels, audits) = dms_api.get_model_audits(audit_url,
                                                            valBldgIDs, headers)
 
     type(refModels) == tp.ListType

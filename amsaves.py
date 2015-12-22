@@ -43,13 +43,18 @@ def am_saves_results(comparisons):
 
     return usesDf
 
-def am_saves_audit(refModels):
+def am_saves_audit(audits):
     """ Pass the results of get_model_audits function; produce audit of 
         results for the 'America Saves!' program as a DataFrame """
 
-    for refModel in refModels:
+    names = ['[kWh/Mo.]', 'Units', '[W/SF]', 'Per. Start', 'Per. End',
+             'Hrs. in Per.', 'Air Temp']
+
+    combinedUsageDfs = []
+    for audit in audits:
         elecUsage = []
         gasUsage = []
+        jsonAudits = audit.json()
         for jsonAudit in jsonAudits:
             values = jsonAudit['TotalUnitsUsed']
             unitOfMeasure = jsonAudit['UnitOfMeasure']
@@ -71,5 +76,6 @@ def am_saves_audit(refModels):
         gasUsageDf = pd.DataFrame(data=gasUsage, columns=names)
         elecUsageDf = pd.DataFrame(data=elecUsage, columns=names)
         combinedUsageDf = pd.concat([gasUsageDf, elecUsageDf], axis=1)
+        combinedUsageDfs.append(combinedUsageDf)
 
-    return combinedUsageDf        
+    return combinedUsageDfs       
