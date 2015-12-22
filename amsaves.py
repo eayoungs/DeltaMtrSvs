@@ -13,9 +13,8 @@ import pandas as pd
 
 
 def am_saves_results(comparisons):
-    """ Pass the results of get_model_comparisons to the am_saves_results 
-        function; produce requested results for the 'America Saves!'
-        program as a DataFrame """
+    """ Pass the results of get_model_comparisons function; produce requested 
+        results for the 'America Saves!' program as a DataFrame """
 
     names = ['Electric Savings [kWh]', 'Gas Savings [Therms]',
                      'Elec. Base-load [kWh]', 'Elec. Cooling [kWh]',
@@ -45,6 +44,8 @@ def am_saves_results(comparisons):
     return usesDf
 
 def am_saves_audit(refModels):
+    """ Pass the results of get_model_audits function; produce audit of 
+        results for the 'America Saves!' program as a DataFrame """
 
     for refModel in refModels:
         elecUsage = []
