@@ -10,6 +10,7 @@ __license__ = "GNU Affero (GPLv3)"
 
 
 import pandas as pd
+from collections import defaultdict
 
 
 def am_saves_results(comparisons):
@@ -43,14 +44,15 @@ def am_saves_results(comparisons):
 
     return usesDf
 
-def am_saves_audit(audits):
+def am_saves_audit(refModelIDs, audits):
     """ Pass the results of get_model_audits function; produce audit of 
         results for the 'America Saves!' program as a DataFrame """
 
     names = ['[kWh/Mo.]', 'Units', '[W/SF]', 'Per. Start', 'Per. End',
              'Hrs. in Per.', 'Air Temp']
 
-    combinedUsageDfs = []
+    combinedUsageDfs = defaultdict(list)
+    i = 0
     for audit in audits:
         elecUsage = []
         gasUsage = []
@@ -76,6 +78,7 @@ def am_saves_audit(audits):
         gasUsageDf = pd.DataFrame(data=gasUsage, columns=names)
         elecUsageDf = pd.DataFrame(data=elecUsage, columns=names)
         combinedUsageDf = pd.concat([gasUsageDf, elecUsageDf], axis=1)
-        combinedUsageDfs.append(combinedUsageDf)
+        combinedUsageDfs[refModelIDs[i]].append(combinedUsageDf)
+        i=i+1
 
     return combinedUsageDfs       

@@ -14,6 +14,7 @@ import private as pvt
 import types as tp
 import pandas as pd
 import re
+from collections import defaultdict
 
 
 headers = pvt.headers
@@ -62,13 +63,17 @@ def test_am_saves_audit():
         (modelIDs, comparisons) = dms_api.get_model_comparisons(comparison_url,
                                                                 json_models,
                                                                 headers)
-        (refModels, audits) = dms_api.get_model_audits(audit_url,
+        (refModelIDs, audits) = dms_api.get_model_audits(audit_url,
                                                            modelIDs, headers)
 
-        combinedUsageDfs = ams.am_saves_audit(audits)
+        combinedUsageDfs = ams.am_saves_audit(refModelIDs, audits)
 
+        for refModelID in refModelIDs:
+            df = pd.DataFrame(combinedUsageDfs[refModelID])
+            fname = refModelID+'-audit.csv'
+            with open(fname, 'wb') as outf:
+                outcsv = df.to_csv(fname)
 
-
-    assert isinstance(combinedUsageDfs, list)
+    assert isinstance(combinedUsageDfs, defaultdict)
     assert [isinstance(combinedUsageDf, pd.DataFrame) for combinedUsageDf in
             combinedUsageDfs]
