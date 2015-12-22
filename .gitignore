@@ -4,6 +4,7 @@
 # Private data
 *private*
 *-results*
+*-audit*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
