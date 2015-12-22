@@ -37,7 +37,7 @@ def get_bldg_models(model_url, bldgIDs, headers):
     return (json_models, valBldgIDs)
 
 def get_model_comparisons(comparison_url, json_models, headers):
-    """ Pass a list of models' data in .JSON fortmat, return model IDs &
+    """ Pass a list of models' data in .JSON format, return model IDs &
         comparisons's data in .JSON format """
 
     modelIDs =[]
@@ -54,3 +54,16 @@ def get_model_comparisons(comparison_url, json_models, headers):
         comparisons.append(comparison)
 
     return (modelIDs, comparisons)
+
+def get_model_audits(audit_url, modelIDs, headers):
+    """ Pass a list of model IDs; return audit IDs and a list of audit data
+        objects in .JSON format. """
+
+    refModels = modelIDs[::2]
+
+    for refModel in refModels:
+        audit_endpt = audit_url + refModel
+        audit = requests.get(audit_url, headers=headers)
+        jsonAudits = audit.json()
+
+    return (refModels, jsonAudits)

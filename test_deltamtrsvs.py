@@ -18,6 +18,7 @@ headers = pvt.headers
 properties_url = pvt.properties_url
 model_url = pvt.model_url
 comparison_url = pvt.comparison_url
+audit_url = pvt.audit_url
 sites = [pvt.FDL, pvt.HJSMS, pvt.Midlesboro]
 
 def test_get_property_bldg_IDs():
@@ -61,3 +62,17 @@ def test_get_model_comparisons():
         assert [type(modelID)==tp.StringType for modelID in modelIDs]
         assert [re.match('\d{4}', modelID) for modelID in modelIDs]
 
+def test_get_model_audits():
+    """ Pass a list of model IDs; confirm the funciton returns valid audit IDs and the expected audit data """ 
+
+    for site in sites:
+        bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)
+        (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
+                                                            headers)
+
+        (refModels, jsonAudits) = dms_api.get_model_audits(audit_url,
+                                                           valBldgIDs, headers)
+
+    type(refModels) == tp.ListType
+    assert [type(refModel)==tp.StringType for refModel in refModels]
+    assert [re.match('\d{4}', refModel) for refModel in refModels] 
