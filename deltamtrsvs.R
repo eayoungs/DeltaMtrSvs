@@ -6,8 +6,8 @@
 # This file contains functions for working with the results of API queries from
 # DeltaMeterServices.com
 
-# install.packages("lubridate") ## Uncomment on first execution (source)
-# library("lubridate")          ## Uncomment on first execution (source)
+install.packages("lubridate")
+library("lubridate")
 
 
 DmsAuditFormat <- function(fname){
@@ -27,12 +27,9 @@ DmsAuditFormat <- function(fname){
   audit.data$Per..Start.1 = as.Date(audit.data$Per..Start.1)
   audit.data$Per..End.1 = as.Date(audit.data$Per..End.1)
 
-  mnths = data.frame()
-  for(i in 1:length(audit.data)){
-    
-    mnths = rbind(data.frame(month(audit.data$Per..Start[i])), mnths)
-  }
+  audit.data = audit.data[order(month(audit.data$Per..Start)),]
+
   print(mnths)
-  write.csv(audit.data, fname)
+  write.csv(audit.data, paste("out-", fname))
   return(audit.data)
 }
