@@ -15,11 +15,12 @@ DmsAuditFormat <- function(fnames){
   # values, then reorders dataframe rows by absolute month (without year).
   #
   # Args:
-  #   fname: File name to be processed by function
+  #   fnames: File names, as a list, to be processed by function
   # 
   # Returns:
-  #   a dataframe containing the original file content reordered by absolute
-  #   month (regardless of year)
+  #   A dataframe containing the original file content reordered by absolute
+  #   month (regardless of year), and contents of each dataframe to a seperate
+  #   file.
   for(i in 1:length(fnames)){
     audit.data = read.csv(fnames[i], header = TRUE, stringsAsFactors = FALSE)
     
