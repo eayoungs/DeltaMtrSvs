@@ -6,10 +6,11 @@ __license__ = "GNU Affero (GPLv3)"
 # This file contains functions for working with the results of API queries from
 # DeltaMeterServices.com
 
+install.packages("lubridate")
 library("lubridate")
 
 
-dms.adt.vis <- function(fname){
+DmsAuditFormat <- function(fname){
   # Reorders audit data from DeltaMeterServices.com for review, based on
   # requirements of the America Saves\! project
   #
