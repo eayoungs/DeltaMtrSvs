@@ -11,8 +11,8 @@
 
 
 DmsAuditFormat <- function(fname){
-  # Reorders audit data from DeltaMeterServices.com for review, based on
-  # requirements of the America Saves\! project
+  # Reformats date-time strings to R date type objects: removing empty time
+  # values, then reorders dataframe rows by absolute month (without year).
   #
   # Args:
   #   fname: File name to be processed by function
@@ -20,12 +20,19 @@ DmsAuditFormat <- function(fname){
   # Returns:
   #   a dataframe containing the original file content reordered by absolute
   #   month (regardless of year)
-  adt.data = read.csv(fname, header = TRUE, stringsAsFactors = FALSE)
+  audit.data = read.csv(fname, header = TRUE, stringsAsFactors = FALSE)
   
+  audit.data$Per..Start = as.Date(audit.data$Per..Start)
+  audit.data$Per..End = as.Date(audit.data$Per..End)
+  audit.data$Per..Start.1 = as.Date(audit.data$Per..Start.1)
+  audit.data$Per..End.1 = as.Date(audit.data$Per..End.1)
+
   mnths = data.frame()
-  for(i in 1:length(adt.data$Per..Start)){
-    mnths = rbind(data.frame(month(adt.data$Per..Start[i])), mnths)
+  for(i in 1:length(audit.data)){
+    
+    mnths = rbind(data.frame(month(audit.data$Per..Start[i])), mnths)
   }
-  
   print(mnths)
+  write.csv(audit.data, fname)
+  return(audit.data)
 }
