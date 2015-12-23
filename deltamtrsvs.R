@@ -1,13 +1,13 @@
-__author__ = "Eric Allen Youngson"
-__email__ = "eric@scneco.com"
-__copyright__ = "Copyright 2015, Succession Ecological Services"
-__license__ = "GNU Affero (GPLv3)"
-
+# __author__ = "Eric Allen Youngson"
+# __email__ = "eric@scneco.com"
+# __copyright__ = "Copyright Dec. 2015, Succession Ecological Services"
+# __license__ = "GNU Affero (GPLv3)"
+# 
 # This file contains functions for working with the results of API queries from
 # DeltaMeterServices.com
 
-install.packages("lubridate")
-library("lubridate")
+# install.packages("lubridate") ## Uncomment on first execution (source)
+# library("lubridate")          ## Uncomment on first execution (source)
 
 
 DmsAuditFormat <- function(fname){
