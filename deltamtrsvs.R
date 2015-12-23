@@ -3,8 +3,9 @@ dms.adt.vis <- function(fname){
   
   adt.data = read.csv(fname, header = TRUE, stringsAsFactors = FALSE)
   
+  mnths = data.frame()
   for(i in 1:length(adt.data$Per..Start)){
-    mnths = month(adt.data$Per..Start[i])
+    mnths = rbind(data.frame(month(adt.data$Per..Start[i])), mnths)
   }
   
   print(mnths)
