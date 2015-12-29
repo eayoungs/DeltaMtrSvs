@@ -6,7 +6,7 @@
 # This file contains functions for working with the results of API queries from
 # DeltaMeterServices.com
 
-install.packages("lubridate") ## Comment out after first calsource()
+# install.packages("lubridate") ## Comment out after first calsource()
 library("lubridate")
 
 
@@ -21,6 +21,8 @@ DmsAuditFormat <- function(fnames){
   #   A dataframe containing the original file content reordered by absolute
   #   month (regardless of year), and contents of each dataframe to a seperate
   #   file.
+  
+  # fnames = c(read.table(fname_list, sep="\n", stringsAsFactors = FALSE))
   for(i in 1:length(fnames)){
     audit.data = read.csv(fnames[i], header = TRUE, stringsAsFactors = FALSE)
     
@@ -29,8 +31,8 @@ DmsAuditFormat <- function(fnames){
     audit.data$Per..Start.1 = as.Date(audit.data$Per..Start.1)
     audit.data$Per..End.1 = as.Date(audit.data$Per..End.1)
 
-    audit.data = audit.data[order(month(audit.data$Per..Start)),]
+    audit.data = audit.data[order(month(audit.data$Per..Start.1)),]
     write.csv(audit.data, paste("out-", fnames[i]))
   }
-  return(audit.data)
+  # return(audit.data)
 }

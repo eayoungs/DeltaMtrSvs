@@ -55,8 +55,7 @@ def test_am_saves_audit():
         (write contents to .CSV file for review) """
 
     for site in sites:
-        bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site,
-                                                headers)
+        bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)
         (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
                                                             headers)
         (modelIDs, comparisons) = dms_api.get_model_comparisons(comparison_url,
