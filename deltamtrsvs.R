@@ -39,9 +39,8 @@ DmsAuditFormat <- function(fnames){
   return(audit.data.lst)
 }
 
+DmsAuditPlot <- function(audit){
+  pwr.tmp.plot = ggplot(audit, aes(x=audit[,9], y=audit[,5])) + geom_point()
 
-DmsAuditPlot <- function(f.names){
-  ggplot(audit, aes(x=audit$Air.Temp, y=audit$X.W.SF.)) + geom_point()
-
-  return()
+  return(pwr.tmp.plot)
 }
