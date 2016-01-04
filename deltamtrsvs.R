@@ -38,17 +38,16 @@ DmsAuditFormat <- function(fnames){
 
     audit.data = audit.data[order(month(audit.data$Per..Start.1)),]
     audit.data.lst[[i]] <- audit.data
-    write.csv(audit.data, paste("out-", fnames[i]))
+    # write.csv(audit.data, paste("out-", fnames[i]))
+  audit.data = data.frame(audit.data.lst[1])
   }
-  # return(audit.data.lst)
+  return(audit.data)
 }
 
-DmsAuditPlot <- function(audit.lst){
-  # audit = data.frame(audit.lst[1])
-  pwr.tmp.gas = ggplot(audit, aes(x=audit[,8], y=audit[,4])) + 
-                geom_point(colour = "Red")
-  pwr.tmp.elec = ggplot(audit, aes(x=audit[,15], y=audit[,11])) +
-                 geom_point(colour = "Blue")
+DmsAuditPlot <- function(df.name){
+  audit.data = read.csv(df.name, header = TRUE, stringsAsFactors = FALSE)
+  pwr.tmp.gas = qplot(audit.data[,"Air.Temp"], audit.data[,"X.W.SF."], color = "red")
+  pwr.tmp.elec = qplot(audit.data[,"Air.Temp.1"], audit.data[,"X.W.SF..1"], color = "blue")
   pwr.tmp.mplot = multiplot(pwr.tmp.gas, pwr.tmp.elec)
 
   return(pwr.tmp.mplot)
