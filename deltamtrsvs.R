@@ -7,7 +7,11 @@
 # DeltaMeterServices.com
 
 # install.packages("lubridate") ## Comment out after first call to source()
-# library("lubridate")
+library("lubridate")
+# install.packages("ggplot2") ## Comment out after first call to source()
+library("ggplot2")
+# install.packages("Rmisc") ## Comment out after first call to source()
+library("Rmisc")
 
 
 DmsAuditFormat <- function(fnames){
@@ -34,14 +38,18 @@ DmsAuditFormat <- function(fnames){
 
     audit.data = audit.data[order(month(audit.data$Per..Start.1)),]
     audit.data.lst[[i]] <- audit.data
-    # write.csv(audit.data, paste("out-", fnames[i]))
+    write.csv(audit.data, paste("out-", fnames[i]))
   }
-  return(audit.data.lst)
+  # return(audit.data.lst)
 }
 
 DmsAuditPlot <- function(audit.lst){
-  audit = data.frame(audit.lst[1])
-  pwr.tmp.plot = ggplot(audit, aes(x=audit[,9], y=audit[,5])) + geom_point()
+  # audit = data.frame(audit.lst[1])
+  pwr.tmp.gas = ggplot(audit, aes(x=audit[,8], y=audit[,4])) + 
+                geom_point(colour = "Red")
+  pwr.tmp.elec = ggplot(audit, aes(x=audit[,15], y=audit[,11])) +
+                 geom_point(colour = "Blue")
+  pwr.tmp.mplot = multiplot(pwr.tmp.gas, pwr.tmp.elec)
 
-  return(pwr.tmp.plot)
+  return(pwr.tmp.mplot)
 }
