@@ -47,12 +47,12 @@ DmsAuditFormat <- function(fnames){
 DmsAuditPlot <- function(df.name){
   audit.data = read.csv(df.name, header = TRUE, stringsAsFactors = FALSE)
   pwr.tmp.gas = qplot(audit.data[,"Hrs..in.Per."], audit.data[,"X.W.SF."], 
-                      color = "red", main = "Gas", xlab = "Hrs. In Period",
-                      ylab = "[W/SF]")
+                      colour = df.name, main = "Gas", xlab = "Hrs. In Period",
+                      ylab = "[W/SF]", xlim = c(0,1000))
   pwr.tmp.elec = qplot(audit.data[,"Hrs..in.Per..1"], audit.data[,"X.W.SF..1"],
-                       color = "blue", main = "Elec.", xlab = "Hrs. In Period",
-                       ylab = "[W/SF]")
-  pwr.tmp.mplot = multiplot(pwr.tmp.gas, pwr.tmp.elec)
+                       colour = df.name, main = "Elec.", xlab = "Hrs. In Period",
+                       ylab = "[W/SF]", xlim = c(0,1000))
+  pwr.tmp.mplot = multiplot(pwr.tmp.gas, pwr.tmp.elec) #, title = "234")
 
   return(pwr.tmp.mplot)
 }
