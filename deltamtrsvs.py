@@ -50,6 +50,7 @@ def get_model_comparisons(comparison_url, json_models, headers):
     for i in range(0, len(modelIDs)-1, 2):
         comparison_endpt = comparison_url + modelIDs[i] + '/1/' + \
                            modelIDs[i+1] + '/1/'
+        # TODO (eayoungs): Add error msgs. & exception handling
         comparison = requests.get(comparison_endpt, headers=headers)
         comparisons.append(comparison)
 

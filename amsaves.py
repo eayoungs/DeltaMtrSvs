@@ -28,7 +28,7 @@ def am_saves_results(comparisons):
         gasThermSavings = round(-json_comps['GasDifference']/29.3072, 0)
         elecBaseLdKwh = round(json_comps['ModelAValues'][3] + \
                               json_comps['ModelAValues'][5] + \
-                              json_comps['ModelAValues'][5], 0)
+                              json_comps['ModelAValues'][7], 0)
         elecClgKwh = round(json_comps['ModelAValues'][0], 0)
         elecHtgKwh = round(json_comps['ModelAValues'][8], 0)
         gasSpcHtgTherm = round(json_comps['ModelAValues'][9]/29.3072, 0)
