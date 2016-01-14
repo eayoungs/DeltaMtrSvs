@@ -76,3 +76,20 @@ def test_get_model_audits():
     type(refModels) == tp.ListType
     assert [type(refModel)==tp.StringType for refModel in refModels]
     assert [re.match('\d{4}', refModel) for refModel in refModels] 
+
+def test_get_fv_charts():
+    """ Pass a URL, a list of moddle ID's and required API header; return a
+        list of FirstView chart objects """
+
+    diagnMsgCodes =[]
+
+    for site in sites:
+        bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)
+
+        fvCharts = dms_api.get_fv_charts(pvt.fv_charts_url, bldgIDs, headers)
+        for fvChart in fvCharts:
+            diagnstcs = fvChart['Diagnostics']
+            msgCode = [diagnstc['MessageCode'] for diagnstc in diagnstcs]
+            diagnMsgCodes.append(msgCode)
+
+        assert len(fvCharts) == len(bldgIDs)
