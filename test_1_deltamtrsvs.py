@@ -92,4 +92,8 @@ def test_get_fv_charts():
             msgCode = [diagnstc['MessageCode'] for diagnstc in diagnstcs]
             diagnMsgCodes.append(msgCode)
 
+            assert len(msgCode) == 10
+            assert [type(diagnstc['MessageCode'])==tp.StringType for diagnstc
+                    in diagnstcs]
+
         assert len(fvCharts) == len(bldgIDs)
