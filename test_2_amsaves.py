@@ -76,3 +76,19 @@ def test_am_saves_audit():
                 outcsv = df.to_csv(fname)
 
             assert isinstance(combinedUsageDct[refModelAdtID], pd.DataFrame)
+
+def test_amsaves_flags():
+    """ """
+
+    flags = []
+
+    for site in sites:
+        bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)
+
+        fvCharts = dms_api.get_fv_charts(pvt.fv_charts_url, bldgIDs, headers)
+        flags = ams.amsaves_flags(fvCharts)
+
+        assert [type(flag)==tp.StringType for flag in
+                flags]
+
+    assert len(fvCharts) == len(bldgIDs)
