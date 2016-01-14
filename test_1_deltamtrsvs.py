@@ -88,6 +88,8 @@ def test_get_fv_charts():
 
         fvCharts = dms_api.get_fv_charts(pvt.fv_charts_url, bldgIDs, headers)
         for fvChart in fvCharts:
+            # TODO (eayoungs): Repeat selections & attribute assertions for
+            #                  remaining fields
             diagnstcs = fvChart['Diagnostics']
             msgCode = [diagnstc['MessageCode'] for diagnstc in diagnstcs]
             diagnMsgCodes.append(msgCode)
