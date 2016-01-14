@@ -2,14 +2,11 @@
 *.csv
 *.xls
 
-# Testing
-*test*
-*Test*
-*TEST*
-
 # Sublime Text filz
 *.sublime-*
 *.pyc
+
+# Hidden working files
 private.py
 .Rproj.user/*
 .cache/*

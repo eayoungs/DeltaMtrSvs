@@ -68,3 +68,17 @@ def get_model_audits(audit_url, modelIDs, headers):
         audits.append(requests.get(audit_endpt, headers=headers))
 
     return (refModelIDs, audits)
+
+def get_fv_charts(fv_charts_url, bldgIDs, headers):
+    """ Pass a URL, a list of building ID's and required API header; return a
+        list of FirstView chart objects """
+
+    fvCharts = []
+
+    for bldgID in bldgIDs:
+        fv_chart_url = fv_charts_url + bldgID
+        fvChart = requests.get(fv_chart_url, headers=headers)
+        jsonFvChart = fvChart.json()
+        fvCharts.append(jsonFvChart)
+
+    return fvCharts
