@@ -81,3 +81,16 @@ def am_saves_audit(refModelIDs, audits):
         i=i+1
 
     return (refModelIDs, combinedUsageDct)
+
+def amsaves_flags(fvCharts):
+    """ Pass the results of get_fv_charts function; produce 'flags' formatted
+        to specification of America Saves! project requirements """
+
+    diagnMsgCodes = []
+
+    for fvChart in fvCharts:
+        diagnstcs = fvChart['Diagnostics']
+        msgCode = [diagnstc['MessageCode'] for diagnstc in diagnstcs]
+        diagnMsgCodes.append(msgCode) 
+
+    return diagnMsgCodes
