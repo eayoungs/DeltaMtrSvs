@@ -10,6 +10,7 @@ __license__ = "GNU Affero (GPLv3)"
 
 
 import pandas as pd
+from collections import defaultdict
 
 
 def am_saves_results(comparisons):
@@ -87,7 +88,7 @@ def amsaves_flags(fvCharts):
         to specification of America Saves! project requirements """
 
     diagnMsgCodes = []
-    amSavesMsgCodes = []
+    msgCodeDfDct = defaultdict()
     dmsMsgNms = ['Occupant Load',
                  'Controls Heating',
                  'Shell Ventilation',
@@ -96,21 +97,12 @@ def amsaves_flags(fvCharts):
 
     for fvChart in fvCharts:
         diagnstcs = fvChart['Diagnostics']
-        msgCodes = [{diagnstc['MessageName']: diagnstc['MessageCode']} for
-                   diagnstc in diagnstcs if diagnstc['MessageName'] in
-                   dmsMsgNms]
-        # if msgCode[0] == 'A' or msgCode[0] == 'B' or msgCode[0] == 'C':
-        #     intElecConsFlg = msgCode[0]
-        #     # TODO (eayoungs): Verify whether flags 'O' & 'P' are in this
-        #     #                  field
-        #     ultraHighElecIntExt = '?'
-        # elif msgCode[0] == 'O' or msgCode[0] == 'P':
-        #     intElecConsFlg = ''
-        #     # TODO (eayoungs): ^
-        #     ultraHighElecIntExt = msgCode[0]
-        # else: intElecConsFlg = ''
-        
-        # amSavesMsgCodes = [intElecConsFlg, ultraHighElecIntExt]
-        diagnMsgCodes.append(msgCodes) 
+        for diagnstc in diagnstcs:
+            if diagnstc['MessageName'] in dmsMsgNms:
+                msgName = diagnstc['MessageName']
+                msgCode = diagnstc['MessageCode']
+                msgCodeDfDct[msgName] = msgCode
+
+        diagnMsgCodes.append(msgCodeDfDct) 
 
     return diagnMsgCodes
