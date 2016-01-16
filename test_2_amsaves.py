@@ -23,8 +23,8 @@ comparison_url = pvt.comparison_url
 audit_url = pvt.audit_url
 sites = [pvt.FDL, pvt.HJSMS, pvt.Midlesboro]
 
-def test_am_saves_results():
-    """ Pass the results of get_model_comparisons to the am_saves_results 
+def test_amsaves_results():
+    """ Pass the results of get_model_comparisons to the amsaves_results 
         function, confirm DataFrame returned in requested results format for
         the 'America Saves!' program (write contents to .CSV file for review)
         """
@@ -39,7 +39,7 @@ def test_am_saves_results():
                                                                 headers)
 
         compLen = len(comparisons)
-        usesDf = ams.am_saves_results(comparisons)
+        usesDf = ams.amsaves_results(comparisons)
 
         fname = site+'-results.csv'
         with open(fname, 'wb') as outf:

@@ -13,7 +13,7 @@ import pandas as pd
 from collections import defaultdict
 
 
-def am_saves_results(comparisons):
+def amsaves_results(comparisons):
     """ Pass the results of get_model_comparisons function; produce requested 
         results for the 'America Saves!' program as a DataFrame """
 
