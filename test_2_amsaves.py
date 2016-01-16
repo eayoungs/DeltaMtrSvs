@@ -88,7 +88,6 @@ def test_amsaves_flags():
         fvCharts = dms_api.get_fv_charts(pvt.fv_charts_url, bldgIDs, headers)
         flags = ams.amsaves_flags(fvCharts)
 
-        assert [type(flag)==tp.StringType for flag in
-                flags]
+        assert [type(flag)==tp.StringType for flag in flags]
 
     assert len(fvCharts) == len(bldgIDs)

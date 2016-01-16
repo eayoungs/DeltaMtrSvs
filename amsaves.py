@@ -87,10 +87,14 @@ def amsaves_flags(fvCharts):
         to specification of America Saves! project requirements """
 
     diagnMsgCodes = []
+    amSavesMsgCodes = []
 
     for fvChart in fvCharts:
         diagnstcs = fvChart['Diagnostics']
         msgCode = [diagnstc['MessageCode'] for diagnstc in diagnstcs]
-        diagnMsgCodes.append(msgCode) 
+        if msgCode[0] == 'A' or msgCode[0] == 'B' or msgCode[0] == 'C':
+            intElecConsFlg = msgCode[0]
+        amSavesMsgCodes = [intElecConsFlg]
+        diagnMsgCodes.append(amSavesMsgCodes) 
 
     return diagnMsgCodes
