@@ -96,8 +96,9 @@ def amsaves_flags(fvCharts):
 
     for fvChart in fvCharts:
         diagnstcs = fvChart['Diagnostics']
-        msgCode = [diagnstc['MessageCode'] for diagnstc in diagnstcs if
-                   diagnstc['MessageName'] in dmsMsgNms]
+        msgCodes = [{diagnstc['MessageName']: diagnstc['MessageCode']} for
+                   diagnstc in diagnstcs if diagnstc['MessageName'] in
+                   dmsMsgNms]
         # if msgCode[0] == 'A' or msgCode[0] == 'B' or msgCode[0] == 'C':
         #     intElecConsFlg = msgCode[0]
         #     # TODO (eayoungs): Verify whether flags 'O' & 'P' are in this
@@ -110,6 +111,6 @@ def amsaves_flags(fvCharts):
         # else: intElecConsFlg = ''
         
         # amSavesMsgCodes = [intElecConsFlg, ultraHighElecIntExt]
-        diagnMsgCodes.append(msgCode) 
+        diagnMsgCodes.append(msgCodes) 
 
     return diagnMsgCodes
