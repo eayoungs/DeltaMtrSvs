@@ -88,7 +88,6 @@ def amsaves_flags(fvCharts):
         to specification of America Saves! project requirements """
 
     diagnMsgCodes = []
-    msgCodeDfDct = defaultdict()
     dmsMsgNms = ['Occupant Load',
                  'Controls Heating',
                  'Shell Ventilation',
@@ -97,6 +96,7 @@ def amsaves_flags(fvCharts):
 
     for fvChart in fvCharts:
         diagnstcs = fvChart['Diagnostics']
+        msgCodeDfDct = defaultdict()
         for diagnstc in diagnstcs:
             if diagnstc['MessageName'] in dmsMsgNms:
                 msgName = diagnstc['MessageName']
