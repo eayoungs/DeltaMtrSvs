@@ -42,8 +42,8 @@ def amsaves_results(comparisons):
 
         usesDf = pd.DataFrame(data=uses, columns=names)
     # TODO (eayoungs): Return a tuple, add primary building IDs from
-    # deltameterservices.com; create a dictionary of dataframes as in
-    # am_saves_audit, 
+    #                  deltameterservices.com; create a dictionary of
+    #                  dataframes as in am_saves_audit, 
     return usesDf
 
 def am_saves_audit(refModelIDs, audits):
@@ -76,15 +76,19 @@ def am_saves_audit(refModelIDs, audits):
                 gasUsage.append([values, unitOfMeasure, pwrDensity,
                                 periodStartDate, periodEndDate, hrsInPeriod,
                                 airTemp])
-        
+        # TODO (eayoungs): Move data frame construction to test function; stick
+        #                  deltameterservices.com structure, filter & , per
+        #                  amsaves_flags()
         gasUsageDf = pd.DataFrame(data=gasUsage, columns=names)
         elecUsageDf = pd.DataFrame(data=elecUsage, columns=names)
         combinedUsageDf = pd.concat([gasUsageDf, elecUsageDf], axis=1)
         combinedUsageDct[refModelIDs[i]] = combinedUsageDf
         i=i+1
 
-    # TODO (eayoungs): Remove refModelIDs from return statement, add primary
-    #                  building IDs from deltameterservices.com
+    # TODO (eayoungs): Remove refModelIDs from return statement, revise
+    #                  combinedUsageDct to a nested dictionary with primary
+    #                  building IDs and reference model IDs from
+    #                  deltameterservices.com, per amsaves_flags()
     return (refModelIDs, combinedUsageDct)
 
 def amsaves_flags(fvCharts):
@@ -108,7 +112,8 @@ def amsaves_flags(fvCharts):
                 msgCodeDfDct[msgName] = msgCode
 
         diagnMsgCodes.append(msgCodeDfDct) 
-
+    # TODO (eayoungs): Return tuple, add primary building IDs from
+    # deltameterservices.com to return statment
     return diagnMsgCodes
 
 # TODO (eayoungs): Create a function to return summary & meta data for each
