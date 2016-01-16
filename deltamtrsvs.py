@@ -39,7 +39,8 @@ def get_bldg_models(model_url, bldgIDs, headers):
 def get_model_comparisons(comparison_url, json_models, headers):
     """ Pass a list of models' data in .JSON format, return model IDs &
         comparisons's data in .JSON format """
-
+    # TODO (eayoungs): Create a new function for this code block to be called
+    #                  seperately; pass only modelIDs to this function
     modelIDs =[]
     for i in range(0, len(json_models)):
         for j in range(0, len(json_models[i])):
@@ -59,7 +60,8 @@ def get_model_comparisons(comparison_url, json_models, headers):
 def get_model_audits(audit_url, modelIDs, headers):
     """ Pass a list of model IDs; return audit IDs and a list of audit data
         objects in .JSON format. """
-
+    # TODO (eayoungs): Create a more explicit selection process to select
+    #                  models by type (ie 'Reference', or 'Proposed').
     refModelIDs = modelIDs[::2]
 
     audits = []

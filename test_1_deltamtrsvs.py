@@ -47,7 +47,7 @@ def test_get_bldg_models():
 
 def test_get_model_comparisons():
     """ Pass a list of models' data, confirm the fuction returns the expected
-        modoel IDs """
+        model IDs """
 
     for site in sites:
         bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)

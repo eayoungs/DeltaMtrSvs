@@ -41,7 +41,9 @@ def am_saves_results(comparisons):
                      elecClgKwh, elecHtgKwh, gasSpcHtgTherm, gasBaseLd])
 
         usesDf = pd.DataFrame(data=uses, columns=names)
-
+    # TODO (eayoungs): Return a tuple, add primary building IDs from
+    # deltameterservices.com; create a dictionary of dataframes as in
+    # am_saves_audit, 
     return usesDf
 
 def am_saves_audit(refModelIDs, audits):
@@ -81,6 +83,8 @@ def am_saves_audit(refModelIDs, audits):
         combinedUsageDct[refModelIDs[i]] = combinedUsageDf
         i=i+1
 
+    # TODO (eayoungs): Remove refModelIDs from return statement, add primary
+    #                  building IDs from deltameterservices.com
     return (refModelIDs, combinedUsageDct)
 
 def amsaves_flags(fvCharts):
@@ -106,3 +110,7 @@ def amsaves_flags(fvCharts):
         diagnMsgCodes.append(msgCodeDfDct) 
 
     return diagnMsgCodes
+
+# TODO (eayoungs): Create a function to return summary & meta data for each
+#                  building. (Some metadata, such as date ranges of meter
+#                  readings will come from audit data)
