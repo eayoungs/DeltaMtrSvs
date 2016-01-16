@@ -94,7 +94,14 @@ def amsaves_flags(fvCharts):
         msgCode = [diagnstc['MessageCode'] for diagnstc in diagnstcs]
         if msgCode[0] == 'A' or msgCode[0] == 'B' or msgCode[0] == 'C':
             intElecConsFlg = msgCode[0]
-        amSavesMsgCodes = [intElecConsFlg]
+            ultraHighElecIntExt = '?'
+        elif msgCode[0] == 'O' or msgCode[0] == 'P':
+            # TODO (eayoungs): Verify whether flags 'O' & 'P' are in this field
+            intElecConsFlg = ''
+            ultraHighElecIntExt = msgCode[0]
+        else: intElecConsFlg = ''
+        
+        amSavesMsgCodes = [intElecConsFlg, ultraHighElecIntExt]
         diagnMsgCodes.append(amSavesMsgCodes) 
 
     return diagnMsgCodes
