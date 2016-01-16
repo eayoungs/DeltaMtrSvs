@@ -88,20 +88,28 @@ def amsaves_flags(fvCharts):
 
     diagnMsgCodes = []
     amSavesMsgCodes = []
+    dmsMsgNms = ['Occupant Load',
+                 'Controls Heating',
+                 'Shell Ventilation',
+                 'Controls Cooling',
+                 'Cooling Efficiency']
 
     for fvChart in fvCharts:
         diagnstcs = fvChart['Diagnostics']
-        msgCode = [diagnstc['MessageCode'] for diagnstc in diagnstcs]
-        if msgCode[0] == 'A' or msgCode[0] == 'B' or msgCode[0] == 'C':
-            intElecConsFlg = msgCode[0]
-            ultraHighElecIntExt = '?'
-        elif msgCode[0] == 'O' or msgCode[0] == 'P':
-            # TODO (eayoungs): Verify whether flags 'O' & 'P' are in this field
-            intElecConsFlg = ''
-            ultraHighElecIntExt = msgCode[0]
-        else: intElecConsFlg = ''
+        msgCode = [diagnstc['MessageCode'] for diagnstc in diagnstcs if
+                   diagnstc['MessageName'] in dmsMsgNms]
+        # if msgCode[0] == 'A' or msgCode[0] == 'B' or msgCode[0] == 'C':
+        #     intElecConsFlg = msgCode[0]
+        #     # TODO (eayoungs): Verify whether flags 'O' & 'P' are in this
+        #     #                  field
+        #     ultraHighElecIntExt = '?'
+        # elif msgCode[0] == 'O' or msgCode[0] == 'P':
+        #     intElecConsFlg = ''
+        #     # TODO (eayoungs): ^
+        #     ultraHighElecIntExt = msgCode[0]
+        # else: intElecConsFlg = ''
         
-        amSavesMsgCodes = [intElecConsFlg, ultraHighElecIntExt]
-        diagnMsgCodes.append(amSavesMsgCodes) 
+        # amSavesMsgCodes = [intElecConsFlg, ultraHighElecIntExt]
+        diagnMsgCodes.append(msgCode) 
 
     return diagnMsgCodes
