@@ -42,16 +42,27 @@ def get_model_comparisons(comparison_url, json_models, headers):
     # TODO (eayoungs): Create a new function for this code block to be called
     #                  seperately; pass only modelIDs to this function
     modelIDs =[]
+    modelTypes = []
     for i in range(0, len(json_models)):
         for j in range(0, len(json_models[i])):
                 modelID = str(json_models[i][j]['SolutionID'])
                 modelIDs.append(modelID)
+                modelType = str(json_models[i][j]['SolutionDesc'])
+                modelTypes.append(modelType)
 
     comparisons =[]
+    # TODO (eayoungs): Revise loop to be more explicit in *matching* "Proposed
+    #                  Model" and "Reference Model"; currently it is assumed 
+    #                  they are alternating in order of creation
     for i in range(0, len(modelIDs)-1, 2):
-        comparison_endpt = comparison_url + modelIDs[i] + '/1/' + \
-                           modelIDs[i+1] + '/1/'
-        # TODO (eayoungs): Add error msgs. & exception handling
+        if 'Reference model' in modelTypes[i]:
+            comparison_endpt = comparison_url + modelIDs[i] + '/1/' + \
+                               modelIDs[i+1] + '/1/'
+        elif 'Proposed model' in modelTypes[i]:
+            comparison_endpt = comparison_url + modelIDs[i+1] + '/1/' + \
+                               modelIDs[i] + '/1/'
+        # TODO (eayoungs): Add error msgs. & exception handling to account for
+        # invalid comparisons
         comparison = requests.get(comparison_endpt, headers=headers)
         comparisons.append(comparison)
 
