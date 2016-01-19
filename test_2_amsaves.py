@@ -80,33 +80,42 @@ def test_am_saves_audit():
 def test_amsaves_flags():
     """ """
 
-    flags = []
-
     for site in sites:
         bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)
-
-        fvCharts = dms_api.get_fv_charts(pvt.fv_charts_url, bldgIDs, headers)
+        (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
+                                                            headers)
+        fvCharts = dms_api.get_fv_charts(pvt.fv_charts_url, valBldgIDs,
+                                         headers)
         flags = ams.amsaves_flags(fvCharts)
         # TODO (eayoungs): Needs more robust assertions
         assert [type(flag)==tp.StringType for flag in flags]
 
-    bldgFlags = []
-    siteFlags = []
-    for flag in flags:
-        if flag['Occupant Load'] == 'A' or flag['Occupant Load'] == 'B' or\
-           flag['Occupant Load'] == 'C':
-            intrnElec = flag['Occupant Load']
-            ultrHighIntExt = ''
-        elif flag['Occupant Load'] == 'O' or flag['Occupant Load'] == 'P':
-            ultrHighIntExt = flag['Occupant Load']
-            intrnElec = ''
-        bldgFlags = [intrnElec, ultrHighIntExt, flag['Controls Heating'],
-                          flag['Shell Ventilation'], flag['Controls Cooling'],
-                          flag['Cooling Efficiency'], flag['Data Consistency']]
-        siteFlags.append(bldgFlags)
-        assert len(bldgFlags) == 7
-        assert [type(bldgFlag)==tp.StringType for bldgFlag in bldgFlags]
-        assert [len(bldgFlag)== 1 for bldgFlag in bldgFlags]
+        siteFlags = []
+        for flag in flags:
+            bldgFlags = []
+            if flag['Occupant Load'] == 'A' or flag['Occupant Load'] == 'B' or\
+               flag['Occupant Load'] == 'C':
+                intrnElec = flag['Occupant Load']
+                ultrHighIntExt = ''
+            elif flag['Occupant Load'] == 'O' or flag['Occupant Load'] == 'P':
+                ultrHighIntExt = flag['Occupant Load']
+                intrnElec = ''
+            bldgFlags = [intrnElec, ultrHighIntExt, flag['Controls Heating'],
+                              flag['Shell Ventilation'], flag['Controls Cooling'],
+                              flag['Cooling Efficiency'], flag['Data Consistency']]
+            siteFlags.append(bldgFlags)
+            assert len(bldgFlags) == 7
+            assert [type(bldgFlag)==tp.StringType for bldgFlag in bldgFlags]
+            assert [len(bldgFlag)== 1 for bldgFlag in bldgFlags]
+    
+            colNms = ['Int. Elec.', 'Ultra-High Elec.', 'Excessive Htg.',
+                      'Shell & Vent.', 'Excessive Clg', 'Inefficient Clg',
+                      'Erratic Operation']
+            df = pd.DataFrame(data=siteFlags, columns=colNms)
+
+            fname = site+'-flags.csv'
+            with open(fname, 'wb') as outf:
+                outcsv = df.to_csv(fname)
 
     assert len(siteFlags) == len(flags)
     assert len(fvCharts) == len(bldgIDs)
