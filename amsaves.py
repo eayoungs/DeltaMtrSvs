@@ -100,7 +100,8 @@ def amsaves_flags(fvCharts):
                  'Controls Heating',
                  'Shell Ventilation',
                  'Controls Cooling',
-                 'Cooling Efficiency']
+                 'Cooling Efficiency',
+                 'Data Consistency']
 
     for fvChart in fvCharts:
         diagnstcs = fvChart['Diagnostics']
