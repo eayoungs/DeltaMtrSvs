@@ -90,4 +90,23 @@ def test_amsaves_flags():
         # TODO (eayoungs): Needs more robust assertions
         assert [type(flag)==tp.StringType for flag in flags]
 
+    bldgFlags = []
+    siteFlags = []
+    for flag in flags:
+        if flag['Occupant Load'] == 'A' or flag['Occupant Load'] == 'B' or\
+           flag['Occupant Load'] == 'C':
+            intrnElec = flag['Occupant Load']
+            ultrHighIntExt = ''
+        elif flag['Occupant Load'] == 'O' or flag['Occupant Load'] == 'P':
+            ultrHighIntExt = flag['Occupant Load']
+            intrnElec = ''
+        bldgFlags = [intrnElec, ultrHighIntExt, flag['Controls Heating'],
+                          flag['Shell Ventilation'], flag['Controls Cooling'],
+                          flag['Cooling Efficiency'], flag['Data Consistency']]
+        siteFlags.append(bldgFlags)
+        assert len(bldgFlags) == 7
+        assert [type(bldgFlag)==tp.StringType for bldgFlag in bldgFlags]
+        assert [len(bldgFlag)== 1 for bldgFlag in bldgFlags]
+
+    assert len(siteFlags) == len(flags)
     assert len(fvCharts) == len(bldgIDs)
