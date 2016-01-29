@@ -60,18 +60,19 @@ def get_model_comparisons(comparison_url, json_models, headers):
         bldgDct[bldgID] = modelDct
 
     comparisons =[]
-    # TODO (eayoungs): Revise loop to be more explicit in *matching* "Proposed
-    #                  Model" and "Reference Model"; currently it is assumed 
-    #                  they are alternating in order of creation
+    modelIDs = []
     for key, value in bldgDct.items():
-        comparison_endpt = comparison_url + bldgDct[key]['Reference Model'] +\
-                           '/1/' + bldgDct[key]['Proposed Model'] + '/1/'
+        refModel = bldgDct[key]['Reference Model']
+        propModel = bldgDct[key]['Proposed Model']
+        comparison_endpt = comparison_url + refModel +'/1/' + propModel + '/1/'
         # TODO (eayoungs): Add error msgs. & exception handling to account for
         # invalid comparisons
         comparison = requests.get(comparison_endpt, headers=headers)
         comparisons.append(comparison)
+        modelIDs.append(refModel)
+        modelIDs.append(propModel)
 
-    return (comparisons) #modelIDs, comparisons)
+    return (modelIDs, comparisons)
 
 def get_model_audits(audit_url, modelIDs, headers):
     """ Pass a list of model IDs; return audit IDs and a list of audit data
