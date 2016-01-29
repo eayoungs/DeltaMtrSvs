@@ -39,34 +39,37 @@ def get_bldg_models(model_url, bldgIDs, headers):
 def get_model_comparisons(comparison_url, json_models, headers):
     """ Pass a list of models' data in .JSON format, return model IDs &
         comparisons's data in .JSON format """
-    # TODO (eayoungs): Create a new function for this code block to be called
-    #                  seperately; pass only modelIDs to this function
-    modelIDs =[]
-    modelTypes = []
+    comps = []
+    bldgDct = {}
     for i in range(0, len(json_models)):
+        modelDct = {}
         for j in range(0, len(json_models[i])):
-                modelID = str(json_models[i][j]['SolutionID'])
-                modelIDs.append(modelID)
-                modelType = str(json_models[i][j]['SolutionDesc'])
-                modelTypes.append(modelType)
+            bldgID = json_models[i][j]['BuildingID']
+            modelID = str(json_models[i][j]['SolutionID'])
+            modelDesc = json_models[i][j]['SolutionType']
+            # TODO (eayoungs): Add error handling here: Else, cond not found
+            if 'Reference Model' in modelDesc:
+                modelType = 'Reference Model'
+            elif 'Proposed Model' in modelDesc:
+                modelType = 'Proposed Model'
+
+            modelDct[modelType] = modelID
+        modelDct['Building ID'] = bldgID
+        bldgDct[bldgID] = modelDct
 
     comparisons =[]
     # TODO (eayoungs): Revise loop to be more explicit in *matching* "Proposed
     #                  Model" and "Reference Model"; currently it is assumed 
     #                  they are alternating in order of creation
-    for i in range(0, len(modelIDs)-1, 2):
-        if 'Reference model' in modelTypes[i]:
-            comparison_endpt = comparison_url + modelIDs[i] + '/1/' + \
-                               modelIDs[i+1] + '/1/'
-        elif 'Proposed model' in modelTypes[i]:
-            comparison_endpt = comparison_url + modelIDs[i+1] + '/1/' + \
-                               modelIDs[i] + '/1/'
+    for key, value in bldgDct.items():
+        comparison_endpt = comparison_url + bldgDct[key]['Reference Model'] +\
+                           '/1/' + bldgDct[key]['Proposed Model'] + '/1/'
         # TODO (eayoungs): Add error msgs. & exception handling to account for
         # invalid comparisons
         comparison = requests.get(comparison_endpt, headers=headers)
         comparisons.append(comparison)
 
-    return (modelIDs, comparisons)
+    return (comparisons) #modelIDs, comparisons)
 
 def get_model_audits(audit_url, modelIDs, headers):
     """ Pass a list of model IDs; return audit IDs and a list of audit data

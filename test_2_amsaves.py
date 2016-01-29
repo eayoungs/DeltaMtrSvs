@@ -34,7 +34,7 @@ def test_amsaves_results():
                                                 headers)
         (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
                                                             headers)
-        (modelIDs, comparisons) = dms_api.get_model_comparisons(comparison_url,
+        (comparisons) = dms_api.get_model_comparisons(comparison_url,
                                                                 json_models,
                                                                 headers)
 
