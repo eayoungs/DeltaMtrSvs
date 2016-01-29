@@ -27,7 +27,8 @@ def amsaves_results(comparisons):
         json_comps = comparison.json()
         elecKwhSavings = round(-json_comps['ElectricDifference'], 0)
         gasThermSavings = round(-json_comps['GasDifference']/29.3072, 0)
-        elecBaseLdKwh = round(json_comps['ModelAValues'][3] + \
+        elecBaseLdKwh = round(json_comps['ModelAValues'][1] + \
+                              json_comps['ModelAValues'][3] + \
                               json_comps['ModelAValues'][5] + \
                               json_comps['ModelAValues'][7], 0)
         elecClgKwh = round(json_comps['ModelAValues'][0], 0)
