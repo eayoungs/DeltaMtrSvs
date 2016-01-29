@@ -19,7 +19,7 @@ properties_url = pvt.properties_url
 model_url = pvt.model_url
 comparison_url = pvt.comparison_url
 audit_url = pvt.audit_url
-sites = [pvt.FDL, pvt.HJSMS, pvt.Midlesboro]
+sites = [pvt.FDL, pvt.HJSMS, pvt.Middlesboro]
 
 def test_get_property_bldg_IDs():
     """ Pass an API URL, property id & header; confirm the fuction returns the expected bldg IDs """

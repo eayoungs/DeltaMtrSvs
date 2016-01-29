@@ -21,7 +21,7 @@ properties_url = pvt.properties_url
 model_url = pvt.model_url
 comparison_url = pvt.comparison_url
 audit_url = pvt.audit_url
-sites = [pvt.FDL, pvt.HJSMS, pvt.Midlesboro]
+sites = [pvt.FDL, pvt.HJSMS, pvt.Middlesboro]
 
 def test_amsaves_results():
     """ Pass the results of get_model_comparisons to the amsaves_results 
