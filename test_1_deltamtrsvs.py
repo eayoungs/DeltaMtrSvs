@@ -21,10 +21,14 @@ comparison_url = pvt.comparison_url
 audit_url = pvt.audit_url
 sites = [pvt.FDL, pvt.HJSMS, pvt.Middlesboro]
 
-def test_get_property_bldg_IDs():
-    """ Pass an API URL, property id & header; confirm the fuction returns the expected bldg IDs """
+def test_get_property_bldgs():
+    """ Pass an API URL, property id & header; confirm the fuction returns the
+        expected bldg IDs """
     for site in sites:
-        bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)
+        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDs = []
+        for key in bldgIDct:
+            bldgIDs.append(str(key))
     
         assert type(bldgIDs) == tp.ListType
         # assert len(bldgIDs) > 0
@@ -36,7 +40,10 @@ def test_get_bldg_models():
         expected valid bldg IDs """
 
     for site in sites:
-        bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)
+        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDs = []
+        for key in bldgIDct:
+            bldgIDs.append(str(key))
         (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
                                                             headers)
 
@@ -50,7 +57,10 @@ def test_get_model_comparisons():
         model IDs """
 
     for site in sites:
-        bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)
+        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDs = []
+        for key in bldgIDct:
+            bldgIDs.append(str(key))
         (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
                                                             headers)
         (modelIDs, comparisons, jModDct) = dms_api.get_model_comparisons(
@@ -67,7 +77,10 @@ def test_get_model_audits():
     """ Pass a list of model IDs; confirm the funciton returns valid audit IDs and the expected audit data """ 
 
     for site in sites:
-        bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)
+        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDs = []
+        for key in bldgIDct:
+            bldgIDs.append(str(key))
         (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
                                                             headers)
 
@@ -85,7 +98,10 @@ def test_get_fv_charts():
     diagnMsgCodes =[]
 
     for site in sites:
-        bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)
+        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDs = []
+        for key in bldgIDct:
+            bldgIDs.append(str(key))
 
         fvCharts = dms_api.get_fv_charts(pvt.fv_charts_url, bldgIDs, headers)
         for fvChart in fvCharts:

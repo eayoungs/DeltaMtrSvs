@@ -30,8 +30,10 @@ def test_amsaves_results():
         """
 
     for site in sites:
-        bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site,
-                                                headers)
+        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDs = []
+        for key in bldgIDct:
+            bldgIDs.append(str(key))
         (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
                                                             headers)
         (modelIDs, compDct, jModDct) = dms_api.get_model_comparisons(
@@ -56,7 +58,10 @@ def test_am_saves_audit():
         (write contents to .CSV file for review) """
 
     for site in sites:
-        bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)
+        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDs = []
+        for key in bldgIDct:
+            bldgIDs.append(str(key))
         (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
                                                             headers)
         (modelIDs, comparisons, jModDct) = dms_api.get_model_comparisons(
@@ -83,7 +88,10 @@ def test_amsaves_flags():
     """ """
 
     for site in sites:
-        bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)
+        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDs = []
+        for key in bldgIDct:
+            bldgIDs.append(str(key))
         (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
                                                             headers)
         fvCharts = dms_api.get_fv_charts(pvt.fv_charts_url, valBldgIDs,

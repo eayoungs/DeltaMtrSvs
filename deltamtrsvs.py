@@ -12,14 +12,18 @@ __license__ = "GNU Affero (GPLv3)"
 import requests
 
 
-def get_property_bldg_IDs(properties_url, site, headers):
-    """ Pass an API URL, property ID; return a list of building IDs for the property """
+def get_property_bldgs(properties_url, site, headers):
+    """ Pass an API URL, property ID; return a list of building IDs for the
+        property """
+    
+    bldgIDct = {}
 
     properties_endpt = properties_url + site
     bldgs = requests.get(properties_endpt, headers=headers).json()
-    bldgIDs = [str(bldg['BuildingID']) for bldg in bldgs]
+    for bldg in bldgs:
+        bldgIDct[bldg['BuildingID']] = bldg
 
-    return bldgIDs
+    return bldgIDct
 
 def get_bldg_models(model_url, bldgIDs, headers):
     """ Pass a list of building IDs; return a list of building IDs for
