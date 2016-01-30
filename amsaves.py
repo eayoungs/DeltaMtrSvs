@@ -13,18 +13,13 @@ import pandas as pd
 from collections import defaultdict
 
 
-def amsaves_results(comparisons):
+def amsaves_results(compDct, jModDct):
     """ Pass the results of get_model_comparisons function; produce requested 
         results for the 'America Saves!' program as a DataFrame """
 
-    names = ['Electric Savings [kWh]', 'Gas Savings [Therms]',
-                     'Elec. Base-load [kWh]', 'Elec. Cooling [kWh]',
-                     'Elec. Heat [kWh]',
-                     'Gas Space Heat [Therms]', 'Gas Base-load [Therms]']
-
     uses = []
-    for comparison in comparisons:
-        json_comps = comparison.json()
+    for key, value in compDct.items():
+        json_comps = compDct[key].json()
         elecKwhSavings = round(-json_comps['ElectricDifference'], 0)
         gasThermSavings = round(-json_comps['GasDifference']/29.3072, 0)
         elecBaseLdKwh = round(json_comps['ModelAValues'][1] + \
@@ -37,11 +32,18 @@ def amsaves_results(comparisons):
         gasBaseLd = round((json_comps['ModelAValues'][2] + \
                            json_comps['ModelAValues'][4] + \
                            json_comps['ModelAValues'][6])/29.3072, 0)
-        
-        uses.append([elecKwhSavings, gasThermSavings, elecBaseLdKwh,
+
+        bldgArea = jModDct[key][0]['SquareFeet']
+
+        uses.append([bldgArea, elecKwhSavings, gasThermSavings, elecBaseLdKwh,
                      elecClgKwh, elecHtgKwh, gasSpcHtgTherm, gasBaseLd])
 
-        usesDf = pd.DataFrame(data=uses, columns=names)
+    names = ['Bldg. Area [ft2]', 'Electric Savings [kWh]',
+             'Gas Savings [Therms]', 'Elec. Base-load [kWh]',
+             'Elec. Cooling [kWh]', 'Elec. Heat [kWh]',
+             'Gas Space Heat [Therms]', 'Gas Base-load [Therms]']
+
+    usesDf = pd.DataFrame(data=uses, columns=names)
     # TODO (eayoungs): Return a tuple, add primary building IDs from
     #                  deltameterservices.com; create a dictionary of
     #                  dataframes as in am_saves_audit, 

@@ -41,8 +41,8 @@ def get_model_comparisons(comparison_url, json_models, headers):
         comparisons's data in .JSON format """
     # TODO (eayoungs): Create a new function for this code block to be called
     #                  seperately; pass only modelIDs to this function
-    comps = []
     bldgDct = {}
+    jModDct = {}
     for i in range(0, len(json_models)):
         modelDct = {}
         for j in range(0, len(json_models[i])):
@@ -54,13 +54,12 @@ def get_model_comparisons(comparison_url, json_models, headers):
                 modelType = 'Reference Model'
             elif 'Proposed Model' in modelDesc:
                 modelType = 'Proposed Model'
-
             modelDct[modelType] = modelID
-        modelDct['Building ID'] = bldgID
         bldgDct[bldgID] = modelDct
+        jModDct[bldgID] = json_models[i]
 
-    comparisons =[]
     modelIDs = []
+    compDct = {}
     for key, value in bldgDct.items():
         refModel = bldgDct[key]['Reference Model']
         propModel = bldgDct[key]['Proposed Model']
@@ -68,11 +67,12 @@ def get_model_comparisons(comparison_url, json_models, headers):
         # TODO (eayoungs): Add error msgs. & exception handling to account for
         # invalid comparisons
         comparison = requests.get(comparison_endpt, headers=headers)
-        comparisons.append(comparison)
+        compDct[key] = comparison
+
         modelIDs.append(refModel)
         modelIDs.append(propModel)
 
-    return (modelIDs, comparisons)
+    return (modelIDs, compDct, jModDct)
 
 def get_model_audits(audit_url, modelIDs, headers):
     """ Pass a list of model IDs; return audit IDs and a list of audit data
