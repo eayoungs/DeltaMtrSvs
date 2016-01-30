@@ -59,7 +59,8 @@ def test_am_saves_audit():
         bldgIDs = dms_api.get_property_bldg_IDs(properties_url, site, headers)
         (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
                                                             headers)
-        (modelIDs, comparisons) = dms_api.get_model_comparisons(comparison_url,
+        (modelIDs, comparisons, jModDct) = dms_api.get_model_comparisons(
+                                                                comparison_url,
                                                                 json_models,
                                                                 headers)
         (refModelIDs, audits) = dms_api.get_model_audits(audit_url,
