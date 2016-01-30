@@ -42,7 +42,7 @@ def test_amsaves_results():
                                                                 headers)
 
         # compLen = len(comparisons)
-        usesDf = ams.amsaves_results(compDct, jModDct)
+        usesDf = ams.amsaves_results(compDct, jModDct, bldgIDct)
 
         fname = site+'-results.csv'
         with open(fname, 'wb') as outf:

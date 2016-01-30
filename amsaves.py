@@ -13,7 +13,7 @@ import pandas as pd
 from collections import defaultdict
 
 
-def amsaves_results(compDct, jModDct):
+def amsaves_results(compDct, jModDct, bldgIDct):
     """ Pass the results of get_model_comparisons function; produce requested 
         results for the 'America Saves!' program as a DataFrame """
 
@@ -33,12 +33,14 @@ def amsaves_results(compDct, jModDct):
                            json_comps['ModelAValues'][4] + \
                            json_comps['ModelAValues'][6])/29.3072, 0)
 
+        customID = bldgIDct[key]['ExternalID']
         bldgArea = jModDct[key][0]['SquareFeet']
 
-        uses.append([bldgArea, elecKwhSavings, gasThermSavings, elecBaseLdKwh,
-                     elecClgKwh, elecHtgKwh, gasSpcHtgTherm, gasBaseLd])
+        uses.append([customID, bldgArea, elecKwhSavings, gasThermSavings,
+                     elecBaseLdKwh, elecClgKwh, elecHtgKwh, gasSpcHtgTherm,
+                     gasBaseLd])
 
-    names = ['Bldg. Area [ft2]', 'Electric Savings [kWh]',
+    names = ['Bldg Energy ID','Bldg. Area [ft2]', 'Electric Savings [kWh]',
              'Gas Savings [Therms]', 'Elec. Base-load [kWh]',
              'Elec. Cooling [kWh]', 'Elec. Heat [kWh]',
              'Gas Space Heat [Therms]', 'Gas Base-load [Therms]']
