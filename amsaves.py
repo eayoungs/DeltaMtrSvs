@@ -35,15 +35,17 @@ def amsaves_results(compDct, jModDct, bldgIDct):
 
         customID = bldgIDct[key]['ExternalID']
         bldgArea = jModDct[key][0]['SquareFeet']
+        rSquare = jModDct[key][0]['R2Coefficient']
 
-        uses.append([customID, bldgArea, elecKwhSavings, gasThermSavings,
-                     elecBaseLdKwh, elecClgKwh, elecHtgKwh, gasSpcHtgTherm,
-                     gasBaseLd])
+        uses.append([customID, bldgArea, rSquare, elecKwhSavings,
+                     gasThermSavings, elecBaseLdKwh, elecClgKwh, elecHtgKwh,
+                     gasSpcHtgTherm, gasBaseLd])
 
-    names = ['Bldg Energy ID','Bldg. Area [ft2]', 'Electric Savings [kWh]',
-             'Gas Savings [Therms]', 'Elec. Base-load [kWh]',
-             'Elec. Cooling [kWh]', 'Elec. Heat [kWh]',
-             'Gas Space Heat [Therms]', 'Gas Base-load [Therms]']
+    names = ['Bldg Energy ID','Bldg. Area [ft2]', 'R2Coef.',
+             'Electric Savings [kWh]', 'Gas Savings [Therms]',
+             'Elec. Base-load [kWh]', 'Elec. Cooling [kWh]',
+             'Elec. Heat [kWh]', 'Gas Space Heat [Therms]',
+             'Gas Base-load [Therms]']
 
     usesDf = pd.DataFrame(data=uses, columns=names)
     # TODO (eayoungs): Return a tuple, add primary building IDs from
