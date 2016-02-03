@@ -14,6 +14,7 @@ import private as pvt
 import types as tp
 import pandas as pd
 import re
+import datetime
 
 
 headers = pvt.headers
@@ -78,6 +79,8 @@ def test_am_saves_audit():
 
         for refModelAdtID in refModelAdtIDs:
             df = combinedUsageDct[refModelAdtID]
+            # span = datetime.date.datefromtimestamp(df['Per. Start'])
+            # print(span.max)
             fname = refModelAdtID + '-audit.csv'
             with open(fname, 'wb') as outf:
                 outcsv = df.to_csv(fname)
@@ -103,24 +106,35 @@ def test_amsaves_flags():
         siteFlags = []
         for flag in flags:
             bldgFlags = []
-            if flag['Occupant Load'] == 'A' or flag['Occupant Load'] == 'B' or\
-               flag['Occupant Load'] == 'C':
-                intrnElec = flag['Occupant Load']
+            if flag['Occupant Load'][0] == 'A' or \
+                flag['Occupant Load'][0] == 'B' or \
+                flag['Occupant Load'][0] == 'C':
+                intrnElec = flag['Occupant Load'][0]
                 ultrHighIntExt = ''
-            elif flag['Occupant Load'] == 'O' or flag['Occupant Load'] == 'P':
-                ultrHighIntExt = flag['Occupant Load']
+            elif flag['Occupant Load'][0] == 'O' or \
+                flag['Occupant Load'] == 'P':
+                ultrHighIntExt = flag['Occupant Load'][0]
                 intrnElec = ''
-            bldgFlags = [intrnElec, ultrHighIntExt, flag['Controls Heating'],
-                              flag['Shell Ventilation'], flag['Controls Cooling'],
-                              flag['Cooling Efficiency'], flag['Data Consistency']]
+            if flag['Summer Gas Use'][1] == "High":
+                highGasBaseLd = "M"
+            else: highGasBaseLd = ""
+
+            bldgFlags = [intrnElec, ultrHighIntExt,
+                         flag['Controls Heating'][0],
+                         flag['Shell Ventilation'][0],
+                         flag['Controls Cooling'][0],
+                         flag['Cooling Efficiency'][0],
+                         flag['Data Consistency'][0],
+                         highGasBaseLd]
+
             siteFlags.append(bldgFlags)
-            assert len(bldgFlags) == 7
-            assert [type(bldgFlag)==tp.StringType for bldgFlag in bldgFlags]
-            assert [len(bldgFlag)== 1 for bldgFlag in bldgFlags]
+            assert len(bldgFlags) == 8
+            assert [type(bldgFlag) == tp.StringType for bldgFlag in bldgFlags]
+            assert [len(bldgFlag) == 1 for bldgFlag in bldgFlags]
     
             colNms = ['Int. Elec.', 'Ultra-High Elec.', 'Excessive Htg.',
                       'Shell & Vent.', 'Excessive Clg', 'Inefficient Clg',
-                      'Erratic Operation']
+                      'Erratic Operation', 'High Gas Eqp.']
             df = pd.DataFrame(data=siteFlags, columns=colNms)
 
             fname = site+'-flags.csv'

@@ -110,7 +110,8 @@ def amsaves_flags(fvCharts):
                  'Shell Ventilation',
                  'Controls Cooling',
                  'Cooling Efficiency',
-                 'Data Consistency']
+                 'Data Consistency',
+                 'Summer Gas Use']
 
     for fvChart in fvCharts:
         diagnstcs = fvChart['Diagnostics']
@@ -119,7 +120,8 @@ def amsaves_flags(fvCharts):
             if diagnstc['MessageName'] in dmsMsgNms:
                 msgName = diagnstc['MessageName']
                 msgCode = diagnstc['MessageCode']
-                msgCodeDfDct[msgName] = msgCode
+                msgTxt = diagnstc['MessageText']
+                msgCodeDfDct[msgName] = [msgCode, msgTxt]
 
         diagnMsgCodes.append(msgCodeDfDct) 
     # TODO (eayoungs): Return tuple, add primary building IDs from
