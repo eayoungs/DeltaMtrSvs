@@ -21,7 +21,7 @@ properties_url = pvt.properties_url
 model_url = pvt.model_url
 comparison_url = pvt.comparison_url
 audit_url = pvt.audit_url
-sites = [pvt.FDL, pvt.HJSMS, pvt.Middlesboro]
+sites = [pvt.Middlesboro, pvt.FDL, pvt.HJSMS]
 
 def test_amsaves_results():
     """ Pass the results of get_model_comparisons to the amsaves_results 
@@ -48,8 +48,8 @@ def test_amsaves_results():
         with open(fname, 'wb') as outf:
             outcsv = usesDf.to_csv(fname)
 
-    # assert isinstance(usesDf, pd.DataFrame)
-    # assert usesDf.shape[1] == 7
+    assert isinstance(usesDf, pd.DataFrame)
+    assert usesDf.shape[1] == 12
     # assert usesDf.shape[0] == compLen
 
 def test_am_saves_audit():
