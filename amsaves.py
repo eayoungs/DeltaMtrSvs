@@ -33,17 +33,18 @@ def amsaves_results(compDct, jModDct, bldgIDct):
                            json_comps['ModelAValues'][4] + \
                            json_comps['ModelAValues'][6])/29.3072, 0)
 
+        bldgID = bldgIDct[key]['BuildingID']
         customID = bldgIDct[key]['ExternalID']
         bldgArea = jModDct[key][0]['SquareFeet']
         rSquare = jModDct[key][0]['R2Coefficient']
         iterQuant = jModDct[key][0]['IterationQty']
 
-        uses.append([customID, bldgArea, rSquare, iterQuant,elecKwhSavings,
-                     gasThermSavings, elecBaseLdKwh, elecClgKwh, elecHtgKwh,
-                     gasSpcHtgTherm, gasBaseLd])
+        uses.append([bldgID, customID, bldgArea, rSquare, iterQuant,
+                     elecKwhSavings, gasThermSavings, elecBaseLdKwh,
+                     elecClgKwh, elecHtgKwh, gasSpcHtgTherm, gasBaseLd])
 
-    names = ['Bldg Energy ID','Bldg. Area [ft2]', 'R2Coef.', 'Iterations',
-             'Electric Savings [kWh]', 'Gas Savings [Therms]',
+    names = ['Blg. ID', 'BldgEnergy ID','Bldg. Area [ft2]', 'R2Coef.',
+             'Iterations', 'Electric Savings [kWh]', 'Gas Savings [Therms]',
              'Elec. Base-load [kWh]', 'Elec. Cooling [kWh]',
              'Elec. Heat [kWh]', 'Gas Space Heat [Therms]',
              'Gas Base-load [Therms]']
