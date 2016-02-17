@@ -45,14 +45,35 @@ DmsAuditFormat <- function(fnames){
 }
 
 UsePerDmsPlot <- function(df.name){
+  # Plots a data-frame containing usage data from the DeltaMeterServices.com
+  # website; power = f(reading length)
+  #
+  # Args:
+  #   
+  # Returns:
+  #   
   audit.data = read.csv(df.name, header = TRUE, stringsAsFactors = FALSE)
   pwr.tmp.gas = qplot(audit.data[,"Hrs..in.Per."], audit.data[,"X.W.SF."], 
                       colour = df.name, main = "Gas", xlab = "Hrs. In Period",
                       ylab = "[W/SF]", xlim = c(0,1000))
   pwr.tmp.elec = qplot(audit.data[,"Hrs..in.Per..1"], audit.data[,"X.W.SF..1"],
-                       colour = df.name, main = "Elec.", xlab = "Hrs. In Period",
+                       colour = df.name, main = "Elec.",
+                       xlab = "Hrs. In Period",
                        ylab = "[W/SF]", xlim = c(0,1000))
   pwr.tmp.mplot = multiplot(pwr.tmp.elec, pwr.tmp.gas) #, title = "234")
 
   return(pwr.tmp.mplot)
+}
+
+UseRange <- function(df.name){
+  gas.start = min(df.name$Per..Start, na.rm=TRUE)
+  gas.end = max(df.name$Per..End, na.rm=TRUE)
+  elec.start = min(df.name$Per..Start.1, na.rm=TRUE)
+  elec.end = max(df.name$Per..End.1, na.rm=TRUE)
+
+  col.names = c("Gas Start", "Gas End", "Elec. Start", "Elec. End")
+  vals = c(gas.start, gas.end, elec.start, elec.end)
+
+  use.range = data.frame(vals, row.names = col.names)
+  return(use.range)
 }
