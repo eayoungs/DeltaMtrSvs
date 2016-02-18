@@ -54,12 +54,13 @@ DmsPlotUsePer <- function(df.name){
   #   pwr.tmp.mplot: 
   audit.data = read.csv(df.name, header = TRUE, stringsAsFactors = FALSE)
   pwr.tmp.gas = qplot(audit.data[,"Hrs..in.Per."], audit.data[,"X.W.SF."], 
-                      colour = df.name, main = "Gas", xlab = "Hrs. In Period",
-                      ylab = "[W/SF]", xlim = c(0,1000))
+                      main = "Gas", xlab = "Hrs. In Period", ylab = "[W/SF]",
+                      xlim = c(0,1000), color=audit.data[,"X.W.SF."]) +
+                      theme(color="red")
   pwr.tmp.elec = qplot(audit.data[,"Hrs..in.Per..1"], audit.data[,"X.W.SF..1"],
-                       colour = df.name, main = "Elec.",
-                       xlab = "Hrs. In Period",
-                       ylab = "[W/SF]", xlim = c(0,1000))
+                       main = "Elec.", xlab = "Hrs. In Period", ylab = "[W/SF]",
+                       xlim = c(0,1000), color=audit.data[,"X.W.SF..1"]) +
+                       theme(color="blue")
   pwr.tmp.mplot = multiplot(pwr.tmp.elec, pwr.tmp.gas) #, title = "234")
 
   return(pwr.tmp.mplot)
