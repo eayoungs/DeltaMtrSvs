@@ -84,12 +84,12 @@ def get_model_audits(audit_url, modelIDs, headers):
     #                  models by type (ie 'Reference', or 'Proposed').
     refModelIDs = modelIDs[::2]
 
-    auditsDct = {}
+    audits = []
     for refModelID in refModelIDs:
         audit_endpt = audit_url + refModelID
-        auditsDct[refModelID] = requests.get(audit_endpt, headers=headers)
+        audits.append(requests.get(audit_endpt, headers=headers))
 
-    return auditsDct
+    return (refModelIDs, audits)
 
 def get_fv_charts(fv_charts_url, bldgIDs, headers):
     """ Pass a URL, a list of building ID's and required API header; return a
