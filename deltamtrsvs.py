@@ -8,7 +8,6 @@ __license__ = "GNU Affero (GPLv3)"
 """ This module provides functions for requesting results from the DeltaMeter
         Services API * deltameterservices.com * """
 
-
 import requests
 
 
@@ -105,3 +104,11 @@ def get_fv_charts(fv_charts_url, bldgIDs, headers):
         fvCharts.append(jsonFvChart)
 
     return fvCharts
+
+def get_bldg_meters(bldg_meters_url, bldgID, headers):
+    """ """
+    bldg_meter_url = bldg_meters_url + bldgID
+    bldgMeters = requests.get(bldg_meter_url, headers=headers)
+    jsonBldgMeters = bldgMeters.json()
+
+    return jsonBldgMeters

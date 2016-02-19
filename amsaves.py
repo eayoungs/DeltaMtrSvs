@@ -8,7 +8,6 @@ __license__ = "GNU Affero (GPLv3)"
 """ This module provides functions for requesting results from the DeltaMeter
         Services API * deltameterservices.com * """
 
-
 import pandas as pd
 from collections import defaultdict
 

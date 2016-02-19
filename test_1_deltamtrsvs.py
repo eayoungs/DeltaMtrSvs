@@ -8,10 +8,10 @@ __license__ = "GNU Affero (GPLv3)"
 """ This module provides functions for requesting results from the DeltaMeter
     Services API * deltameterservices.com * """
 
-import deltamtrsvs as dms_api
-import private as pvt
 import types as tp
 import re
+import deltamtrsvs as dms_api
+import private as pvt
 
 
 headers = pvt.headers
@@ -116,3 +116,22 @@ def test_get_fv_charts():
                     in diagnstcs]
 
         assert len(fvCharts) == len(bldgIDs)
+
+def test_get_bldg_meters():
+    """ Pass a single building ID number; return a list of meter objects in
+        .JSON format associated with the given building """
+
+    bldgMeters = dms_api.get_bldg_meters(pvt.bldg_meters_url, '1267', headers)
+
+    assert type(bldgMeters) == tp.ListType
+    assert len(bldgMeters) <= 2
+    if bldgMeters[0]["MeterTypeID"] == 1:
+        assert bldgMeters[1]["MeterTypeID"] != 1
+    else:
+        if bldgMeters[1]["MeterTypeID"] == 1:
+            assert bldgMeters[0]["MeterTypeID"] != 1
+    if bldgMeters[0]["MeterTypeID"] == 2:
+        assert bldgMeters[1]["MeterTypeID"] != 2
+    else:
+        if bldgMeters[1]["MeterTypeID"] == 2:
+            assert bldgMeters[0]["MeterTypeID"] != 2
