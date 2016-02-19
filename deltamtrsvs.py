@@ -105,10 +105,15 @@ def get_fv_charts(fv_charts_url, bldgIDs, headers):
 
     return fvCharts
 
-def get_bldg_meters(bldg_meters_url, bldgID, headers):
+def get_bldg_meters(bldg_meters_url, bldgIDs, headers):
     """ """
-    bldg_meter_url = bldg_meters_url + bldgID
-    bldgMeters = requests.get(bldg_meter_url, headers=headers)
-    jsonBldgMeters = bldgMeters.json()
+    bldgMeterDct = {}
+    bldgMetersList = []
+    for bldgID in bldgIDs:
+        bldg_meter_url = bldg_meters_url + bldgID
+        bldgMeters = requests.get(bldg_meter_url, headers=headers)
+        jsonBldgMeters = bldgMeters.json()
+        bldgMeterDct[bldgID] = jsonBldgMeters
+        bldgMetersList.append(bldgMeterDct)
 
-    return jsonBldgMeters
+    return bldgMetersList

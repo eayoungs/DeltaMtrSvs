@@ -121,17 +121,25 @@ def test_get_bldg_meters():
     """ Pass a single building ID number; return a list of meter objects in
         .JSON format associated with the given building """
 
-    bldgMeters = dms_api.get_bldg_meters(pvt.bldg_meters_url, '1267', headers)
+    bldgIDct = dms_api.get_property_bldgs(properties_url, '43', headers)
+    bldgIDs = []
+    for key in bldgIDct:
+        bldgIDs.append(str(key))
 
-    assert type(bldgMeters) == tp.ListType
-    assert len(bldgMeters) <= 2
-    if bldgMeters[0]["MeterTypeID"] == 1:
-        assert bldgMeters[1]["MeterTypeID"] != 1
-    else:
-        if bldgMeters[1]["MeterTypeID"] == 1:
-            assert bldgMeters[0]["MeterTypeID"] != 1
-    if bldgMeters[0]["MeterTypeID"] == 2:
-        assert bldgMeters[1]["MeterTypeID"] != 2
-    else:
-        if bldgMeters[1]["MeterTypeID"] == 2:
-            assert bldgMeters[0]["MeterTypeID"] != 2
+    bldgMeters = dms_api.get_bldg_meters(pvt.bldg_meters_url, bldgIDs, headers)
+
+    for bldgMeter in bldgMeters:
+        for bldgID in bldgIDs:
+            assert type(bldgMeter[bldgID]) == tp.ListType
+            assert len(bldgMeter[bldgID]) <= 2
+            if bldgMeter[bldgID] > 1:
+                if bldgMeter[bldgID][0]["MeterTypeID"] == 1:
+                    assert bldgMeter[bldgID][1]["MeterTypeID"] != 1
+                else:
+                    if bldgMeter[bldgID][0]["MeterTypeID"] == 1:
+                        assert bldgMeter[bldgID][1]["MeterTypeID"] != 1
+                if bldgMeter[bldgID][0]["MeterTypeID"] == 2:
+                    assert bldgMeter[bldgID][1]["MeterTypeID"] != 2
+                else:
+                    if bldgMeter[bldgID][1]["MeterTypeID"] == 2:
+                        assert bldgMeter[bldgID][0]["MeterTypeID"] != 2

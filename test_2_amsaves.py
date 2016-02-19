@@ -69,8 +69,8 @@ def test_am_saves_audit():
                                                                 comparison_url,
                                                                 json_models,
                                                                 headers)
-        (refModelIDs, audits) = dms_api.get_model_audits(audit_url,
-                                                           modelIDs, headers)
+        (refModelIDs, audits) = dms_api.get_model_audits(audit_url, modelIDs,
+                                                         headers)
 
         combinedUsageDct = ams.am_saves_audit(refModelIDs, audits)
 
@@ -142,3 +142,23 @@ def test_amsaves_flags():
 
     assert len(siteFlags) == len(flags)
     assert len(fvCharts) == len(bldgIDs)
+
+def test_amsaves_usage_range():
+    """ """
+    for site in sites:
+        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDs = []
+        for key in bldgIDct:
+            bldgIDs.append(str(key))
+        (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
+                                                            headers)
+        (modelIDs, comparisons, jModDct) = dms_api.get_model_comparisons(
+                                                                comparison_url,
+                                                                json_models,
+                                                                headers)
+        (refModelIDs, audits) = dms_api.get_model_audits(audit_url, modelIDs,
+                                                         headers)
+
+        combinedUsageDct = ams.am_saves_audit(refModelIDs, audits)
+
+        assert isinstance(combinedUsageDct, dict)
