@@ -8,8 +8,8 @@ __license__ = "GNU Affero (GPLv3)"
 """ This module provides functions for requesting results from the DeltaMeter
         Services API * deltameterservices.com * """
 
-import pandas as pd
 from collections import defaultdict
+import pandas as pd
 
 
 def amsaves_results(compDct, jModDct, bldgIDct):
@@ -98,7 +98,7 @@ def am_saves_audit(refModelIDs, audits):
     #                  combinedUsageDct to a nested dictionary with primary
     #                  building IDs and reference model IDs from
     #                  deltameterservices.com, per amsaves_flags()
-    return (refModelIDs, combinedUsageDct)
+    return combinedUsageDct
 
 def amsaves_flags(fvCharts):
     """ Pass the results of get_fv_charts function; produce 'flags' formatted

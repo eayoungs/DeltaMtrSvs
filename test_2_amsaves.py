@@ -1,20 +1,20 @@
 #!/usr/bin/env python
 
 __author__ = "Eric Allen Youngson"
-__email__ = "eric@scneco.com"
+__email__ = "eric@Successionecological.com"
 __copyright__ = "Copyright 2015, Succession Ecological Services"
 __license__ = "GNU Affero (GPLv3)"
 
 """ This module provides functions for requesting results from the DeltaMeter
     Services API * deltameterservices.com * """
 
-import deltamtrsvs as dms_api
-import amsaves as ams
-import private as pvt
+import datetime
 import types as tp
 import pandas as pd
 import re
-import datetime
+import deltamtrsvs as dms_api
+import amsaves as ams
+import private as pvt
 
 
 headers = pvt.headers
@@ -72,12 +72,11 @@ def test_am_saves_audit():
         (refModelIDs, audits) = dms_api.get_model_audits(audit_url,
                                                            modelIDs, headers)
 
-        (refModelAdtIDs, combinedUsageDct) = ams.am_saves_audit(refModelIDs,
-                                                                audits)
+        combinedUsageDct = ams.am_saves_audit(refModelIDs, audits)
 
         assert isinstance(combinedUsageDct, dict)
 
-        for refModelAdtID in refModelAdtIDs:
+        for refModelAdtID in refModelIDs:
             df = combinedUsageDct[refModelAdtID]
             # span = datetime.date.datefromtimestamp(df['Per. Start'])
             # print(span.max)
