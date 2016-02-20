@@ -88,7 +88,7 @@ def get_model_audits(audit_url, modelIDs, headers):
     for refModelID in refModelIDs:
         audit_endpt = audit_url + refModelID
         audits.append(requests.get(audit_endpt, headers=headers))
-
+    # TODO (eayoungs): Revise function to return a single object
     return (refModelIDs, audits)
 
 def get_fv_charts(fv_charts_url, bldgIDs, headers):

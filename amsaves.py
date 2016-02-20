@@ -131,3 +131,43 @@ def amsaves_flags(fvCharts):
 # TODO (eayoungs): Create a function to return summary & meta data for each
 #                  building. (Some metadata, such as date ranges of meter
 #                  readings will come from audit data)
+
+
+def amsaves_usage_range(audits):
+    """ """
+
+    auditSpans = {}
+    for audit in audits:
+        jsonAudits = audit.json()
+        for jsonAudit in jsonAudits:
+            elecStart = []
+            elecEnd = []
+            gasStart = []
+            gasEnd = []
+            spanData = {}
+            auditID = str(jsonAudit['SolutionID'])
+            periodStartDate = str(jsonAudit['PeriodStartDate'])
+            periodEndDate = str(jsonAudit['PeriodEndDate'])
+            if jsonAudit['UnitOfMeasure'] == 'KWH':
+                elecStart.append(periodStartDate)
+                elecEnd.append(periodEndDate)
+            elif jsonAudit['UnitOfMeasure'] == 'THERM':
+                gasStart.append(periodStartDate)
+                gasEnd.append(periodEndDate)
+
+            elecSpanBegin = min(elecStart)
+            elecSpanEnd = max(elecEnd)
+            if len(gasStart) > 0:
+                gasSpanBegin = min(gasStart)
+                gasSpanEnd = max(gasEnd)
+                spanData['E. Per. Begin'] = elecSpanBegin
+                spanData['E. Per. End'] = elecSpanEnd
+                spanData['G. Per. Begin'] = gasSpanBegin,
+                spanData['G. Per. End'] = gasSpanEnd
+            else:
+                spanData['E. Per. Begin'] = elecSpanBegin
+                spanData['E. Per. End'] = elecSpanEnd
+            auditSpans[auditID] = spanData
+        #usageRange[refModelIDs] = utilityUsageRange
+
+        return auditSpans

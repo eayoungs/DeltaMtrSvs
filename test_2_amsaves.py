@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Eric Allen Youngson"
-__email__ = "eric@Successionecological.com"
+__email__ = "eric@successionecological.com"
 __copyright__ = "Copyright 2015, Succession Ecological Services"
 __license__ = "GNU Affero (GPLv3)"
 
@@ -23,6 +23,7 @@ model_url = pvt.model_url
 comparison_url = pvt.comparison_url
 audit_url = pvt.audit_url
 sites = [pvt.Middlesboro, pvt.FDL, pvt.HJSMS]
+
 
 def test_amsaves_results():
     """ Pass the results of get_model_comparisons to the amsaves_results 
@@ -52,6 +53,7 @@ def test_amsaves_results():
     assert isinstance(usesDf, pd.DataFrame)
     assert usesDf.shape[1] == 13
     # assert usesDf.shape[0] == compLen
+
 
 def test_am_saves_audit():
     """ Pass the results of get_model_audits function, confirm DataFrame
@@ -85,6 +87,7 @@ def test_am_saves_audit():
                 outcsv = df.to_csv(fname)
 
             assert isinstance(combinedUsageDct[refModelAdtID], pd.DataFrame)
+
 
 def test_amsaves_flags():
     """ """
@@ -143,6 +146,7 @@ def test_amsaves_flags():
     assert len(siteFlags) == len(flags)
     assert len(fvCharts) == len(bldgIDs)
 
+
 def test_amsaves_usage_range():
     """ """
     for site in sites:
@@ -158,7 +162,10 @@ def test_amsaves_usage_range():
                                                                 headers)
         (refModelIDs, audits) = dms_api.get_model_audits(audit_url, modelIDs,
                                                          headers)
+        auditSpans = ams.amsaves_usage_range(audits)
 
-        combinedUsageDct = ams.am_saves_audit(refModelIDs, audits)
-
-        assert isinstance(combinedUsageDct, dict)
+        assert type(auditSpans) == tp.DictType
+        assert len(auditSpans) == len(refModelIDs)
+        for key, value in auditSpans:
+            assert type(key) == tp.IntType
+            assert type(value) == tp.DictType
