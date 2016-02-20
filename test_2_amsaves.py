@@ -77,6 +77,7 @@ def test_am_saves_audit():
         combinedUsageDct = ams.am_saves_audit(refModelIDs, audits)
 
         assert isinstance(combinedUsageDct, dict)
+        assert len(combinedUsageDct) == len(refModelIDs)
 
         for refModelAdtID in refModelIDs:
             df = combinedUsageDct[refModelAdtID]
@@ -148,7 +149,10 @@ def test_amsaves_flags():
 
 
 def test_amsaves_usage_range():
-    """ """
+    """ Pass the results of get_model_audits function, confirm returned
+        dictionary in requested results format for the 'America Saves!' program
+        """
+
     for site in sites:
         bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
         bldgIDs = []
@@ -162,10 +166,10 @@ def test_amsaves_usage_range():
                                                                 headers)
         (refModelIDs, audits) = dms_api.get_model_audits(audit_url, modelIDs,
                                                          headers)
-        auditSpans = ams.amsaves_usage_range(audits)
+        auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
 
         assert type(auditSpans) == tp.DictType
         assert len(auditSpans) == len(refModelIDs)
-        for key, value in auditSpans:
-            assert type(key) == tp.IntType
+        for key, value in auditSpans.iteritems():
+            assert type(key) == tp.StringType
             assert type(value) == tp.DictType

@@ -133,19 +133,21 @@ def amsaves_flags(fvCharts):
 #                  readings will come from audit data)
 
 
-def amsaves_usage_range(audits):
-    """ """
+def amsaves_usage_range(refModelIDs, audits):
+    """ Pass the results of get_model_audits function; produce time span of
+        utility billing used in ma given model results for the 'America
+        Saves!' program """
 
     auditSpans = {}
+    i = 0
     for audit in audits:
+        elecStart = []
+        elecEnd = []
+        gasStart = []
+        gasEnd = []
+        spanData = {}
         jsonAudits = audit.json()
         for jsonAudit in jsonAudits:
-            elecStart = []
-            elecEnd = []
-            gasStart = []
-            gasEnd = []
-            spanData = {}
-            auditID = str(jsonAudit['SolutionID'])
             periodStartDate = str(jsonAudit['PeriodStartDate'])
             periodEndDate = str(jsonAudit['PeriodEndDate'])
             if jsonAudit['UnitOfMeasure'] == 'KWH':
@@ -154,20 +156,19 @@ def amsaves_usage_range(audits):
             elif jsonAudit['UnitOfMeasure'] == 'THERM':
                 gasStart.append(periodStartDate)
                 gasEnd.append(periodEndDate)
-
-            elecSpanBegin = min(elecStart)
-            elecSpanEnd = max(elecEnd)
-            if len(gasStart) > 0:
-                gasSpanBegin = min(gasStart)
-                gasSpanEnd = max(gasEnd)
-                spanData['E. Per. Begin'] = elecSpanBegin
-                spanData['E. Per. End'] = elecSpanEnd
-                spanData['G. Per. Begin'] = gasSpanBegin,
-                spanData['G. Per. End'] = gasSpanEnd
-            else:
-                spanData['E. Per. Begin'] = elecSpanBegin
-                spanData['E. Per. End'] = elecSpanEnd
-            auditSpans[auditID] = spanData
-        #usageRange[refModelIDs] = utilityUsageRange
+        elecSpanBegin = min(elecStart)
+        elecSpanEnd = max(elecEnd)
+        if len(gasStart) > 0:
+            gasSpanBegin = min(gasStart)
+            gasSpanEnd = max(gasEnd)
+            spanData['E. Per. Begin'] = elecSpanBegin
+            spanData['E. Per. End'] = elecSpanEnd
+            spanData['G. Per. Begin'] = gasSpanBegin
+            spanData['G. Per. End'] = gasSpanEnd
+        else:
+            spanData['E. Per. Begin'] = elecSpanBegin
+            spanData['E. Per. End'] = elecSpanEnd
+        auditSpans[refModelIDs[i]] = spanData
+        i = i+1
 
         return auditSpans
