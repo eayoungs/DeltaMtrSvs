@@ -34,17 +34,17 @@ def amsaves_results(compDct, jModDct, bldgIDct):
 
         bldgID = bldgIDct[key]['BuildingID']
         customID = bldgIDct[key]['ExternalID']
-        bldgArea = jModDct[key][0]['SquareFeet']
         rSquare = jModDct[key][0]['R2Coefficient']
         iterQuant = jModDct[key][0]['IterationQty']
+        bldgArea = jModDct[key][0]['SquareFeet']
         solnID = jModDct[key][0]['SolutionID']
 
-        uses.append([bldgID, customID, bldgArea, rSquare, iterQuant, solnID,
+        uses.append([bldgID, customID, rSquare, bldgArea, iterQuant, solnID,
                      elecKwhSavings, gasThermSavings, elecBaseLdKwh,
                      elecClgKwh, elecHtgKwh, gasSpcHtgTherm, gasBaseLd])
 
-    names = ['Blg. ID', 'BldgEnergy ID','Bldg. Area [ft2]', 'R2Coef.',
-             'Iterations', 'Solution ID', 'Electric Savings [kWh]',
+    names = ['Blg. ID', 'BldgEnergy ID', 'R2Coef.', 'Iterations',
+             'Bldg. Area [ft2]', 'Solution ID', 'Electric Savings [kWh]',
              'Gas Savings [Therms]', 'Elec. Base-load [kWh]',
              'Elec. Cooling [kWh]', 'Elec. Heat [kWh]',
              'Gas Space Heat [Therms]', 'Gas Base-load [Therms]']
