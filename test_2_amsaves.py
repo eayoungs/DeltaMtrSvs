@@ -118,6 +118,8 @@ def test_amsaves_flags():
                 flag['Occupant Load'] == 'P':
                 ultrHighIntExt = flag['Occupant Load'][0]
                 intrnElec = ''
+            # TODO (eayoungs): Add exception handling for final *else*
+            #                  statement
             if flag['Summer Gas Use'][1] == "High":
                 highGasBaseLd = "M"
             else: highGasBaseLd = ""
@@ -169,7 +171,28 @@ def test_amsaves_usage_range():
         auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
 
         assert type(auditSpans) == tp.DictType
-        assert len(auditSpans) == len(refModelIDs)
+        # assert len(auditSpans) == len(refModelIDs)
+        spans = []
         for key, value in auditSpans.iteritems():
             assert type(key) == tp.StringType
             assert type(value) == tp.DictType
+            vals = []
+            colNms = []
+            if len(auditSpans[key]) == 2:
+                vals = [key, auditSpans[key]['E. Per. Begin'],
+                        auditSpans[key]['E. Per. End']]
+                colNms = ['Ref. Model ID', 'E. Per. Begin', 'E. Per. End']
+            elif len(auditSpans[key]) == 4:
+                vals = [key, auditSpans[key]['E. Per. Begin'],
+                        auditSpans[key]['E. Per. End'],
+                        auditSpans[key]['G. Per. Begin'],
+                        auditSpans[key]['G. Per. End']]
+                colNms = ['Ref. Model ID', 'E. Per. Begin', 'E. Per. End',
+                          'G. Per. Begin', 'G. Per. End']
+            # TODO (eayoungs): Add exception handling and include in final
+            #                  *else* statement
+            spans.append(vals)
+            df = pd.DataFrame(data=spans, columns=colNms)
+        fname = site +'-use_ranges.csv'
+        with open(fname, 'wb') as outf:
+            outcsv = df.to_csv(fname)
