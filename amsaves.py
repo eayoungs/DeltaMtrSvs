@@ -171,4 +171,4 @@ def amsaves_usage_range(refModelIDs, audits):
         auditSpans[refModelIDs[i]] = spanData
         i = i+1
 
-        return auditSpans
+    return auditSpans
