@@ -13,13 +13,13 @@ import re
 import deltamtrsvs as dms_api
 import private as pvt
 
-
 headers = pvt.headers
 properties_url = pvt.properties_url
 model_url = pvt.model_url
 comparison_url = pvt.comparison_url
 audit_url = pvt.audit_url
 sites = [pvt.FDL, pvt.HJSMS, pvt.Middlesboro]
+
 
 def test_get_property_bldgs():
     """ Pass an API URL, property id & header; confirm the fuction returns the
@@ -35,6 +35,7 @@ def test_get_property_bldgs():
         assert [type(bldgID)==tp.StringType for bldgID in bldgIDs]
         assert [re.match('\d{4}', bldgID) for bldgID in bldgIDs]
 
+
 def test_get_bldg_models():
     """ Pass a list of bldg ids & header, confirm the fuction returns the
         expected valid bldg IDs """
@@ -44,13 +45,13 @@ def test_get_bldg_models():
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
-        (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
+        modelsJsonDct = dms_api.get_bldg_models(model_url, bldgIDs,
                                                             headers)
+        for key in modelsJsonDct:
+            assert type(modelsJsonDct) == tp.DictType
+            assert type(key)==tp.StringType 
+            assert re.match('\d{4}', key)
 
-        assert type(valBldgIDs) == tp.ListType
-        # assert len(valBldgIDs) <= len(bldgIDs)
-        assert [type(valBldgID)==tp.StringType for valBldgID in valBldgIDs]
-        assert [re.match('\d{4}', valBldgID) for valBldgID in valBldgIDs]
 
 def test_get_model_comparisons():
     """ Pass a list of models' data, confirm the fuction returns the expected
@@ -73,6 +74,7 @@ def test_get_model_comparisons():
         assert [type(modelID)==tp.StringType for modelID in modelIDs]
         assert [re.match('\d{4}', modelID) for modelID in modelIDs]
 
+
 def test_get_model_audits():
     """ Pass a list of model IDs; confirm the funciton returns valid audit IDs and the expected audit data """ 
 
@@ -90,6 +92,7 @@ def test_get_model_audits():
     type(refModels) == tp.ListType
     assert [type(refModel)==tp.StringType for refModel in refModels]
     assert [re.match('\d{4}', refModel) for refModel in refModels] 
+
 
 def test_get_fv_charts():
     """ Pass a URL, a list of moddle ID's and required API header; return a
@@ -116,6 +119,7 @@ def test_get_fv_charts():
                     in diagnstcs]
 
         assert len(fvCharts) == len(bldgIDs)
+
 
 def test_get_bldg_meters():
     """ Pass a single building ID number; return a list of meter objects in

@@ -12,10 +12,9 @@ import datetime
 import types as tp
 import pandas as pd
 import re
-import deltamtrsvs as dms_api
+import deltamtrsvs 
 import amsaves as ams
 import private as pvt
-
 
 headers = pvt.headers
 properties_url = pvt.properties_url
@@ -32,20 +31,21 @@ def test_amsaves_results():
         """
 
     for site in sites:
-        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
+                                                    headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
-        (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
-                                                            headers)
-        (modelIDs, compDct, jModDct) = dms_api.get_model_comparisons(
+        modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
+                                                      headers)
+        modelIDs = []
+        for key in modelsJsonDct:
+            modelIDs.append(str(key))
+        (modelIDs, compDct, jModDct) = deltamtrsvs.get_model_comparisons(
                                                                 comparison_url,
-                                                                json_models,
+                                                                modelsJsonDct,
                                                                 headers)
-
-        # compLen = len(comparisons)
         usesDf = ams.amsaves_results(compDct, jModDct, bldgIDct)
-
         fname = site+'-results.csv'
         with open(fname, 'wb') as outf:
             outcsv = usesDf.to_csv(fname)
@@ -61,19 +61,18 @@ def test_am_saves_audit():
         (write contents to .CSV file for review) """
 
     for site in sites:
-        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site, headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
-        (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
+        modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                             headers)
-        (modelIDs, comparisons, jModDct) = dms_api.get_model_comparisons(
+        (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
                                                                 comparison_url,
-                                                                json_models,
+                                                                modelsJsonDct,
                                                                 headers)
-        (refModelIDs, audits) = dms_api.get_model_audits(audit_url, modelIDs,
-                                                         headers)
-
+        (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url,
+                                                             modelIDs, headers)
         combinedUsageDct = ams.am_saves_audit(refModelIDs, audits)
 
         assert isinstance(combinedUsageDct, dict)
@@ -94,13 +93,13 @@ def test_amsaves_flags():
     """ """
 
     for site in sites:
-        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site, headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
-        (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
+        modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                             headers)
-        fvCharts = dms_api.get_fv_charts(pvt.fv_charts_url, valBldgIDs,
+        fvCharts = deltamtrsvs.get_fv_charts(pvt.fv_charts_url, valBldgIDs,
                                          headers)
         flags = ams.amsaves_flags(fvCharts)
         # TODO (eayoungs): Needs more robust assertions
@@ -156,17 +155,17 @@ def test_amsaves_usage_range():
         """
 
     for site in sites:
-        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site, headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
-        (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
+        modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                             headers)
-        (modelIDs, comparisons, jModDct) = dms_api.get_model_comparisons(
+        (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
                                                                 comparison_url,
-                                                                json_models,
+                                                                modelsJsonDct,
                                                                 headers)
-        (refModelIDs, audits) = dms_api.get_model_audits(audit_url, modelIDs,
+        (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url, modelIDs,
                                                          headers)
         auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
 

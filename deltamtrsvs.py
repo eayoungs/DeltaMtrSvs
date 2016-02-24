@@ -6,7 +6,14 @@ __copyright__ = "Copyright 2015, Succession Ecological Services"
 __license__ = "GNU Affero (GPLv3)"
 
 """ This module provides functions for requesting results from the DeltaMeter
-        Services API * deltameterservices.com * """
+    Services API * deltameterservices.com *
+    Each function is intended to encapsulate one & only one API end-point.
+    Args:
+        Each function takes at minimum; an API URL, headers and either a list
+        of object IDs, or a dictionary of objects with IDs as keys
+    Returns:
+        Each function will return a single data structure containing objects
+        and IDs; typically a dictionary with IDs as keys """
 
 import requests
 
@@ -28,22 +35,24 @@ def get_bldg_models(model_url, bldgIDs, headers):
     """ Pass a list of building IDs; return a list of building IDs for
         which valid data is available, and the data in .JSON format. """
 
-    json_models = []
+    modelsJsonDct = {}
     valBldgIDs = []
     for bldgID in bldgIDs:
         model_endpt = model_url + bldgID
         models = requests.get(model_endpt, headers=headers)
         if requests.get(model_endpt, headers=headers):
-                json_models.append(models.json())
-                valBldgIDs.append(str(bldgID))
+                modelsJsonDct[bldgID] = models.json()
 
-    return (json_models, valBldgIDs)
+    return modelsJsonDct 
 
-def get_model_comparisons(comparison_url, json_models, headers):
+def get_model_comparisons(comparison_url, modelsJsonDct, headers):
     """ Pass a list of models' data in .JSON format, return model IDs &
         comparisons's data in .JSON format """
     # TODO (eayoungs): Create a new function for this code block to be called
     #                  seperately; pass only modelIDs to this function
+    json_models = []
+    for key, value in modelsJsonDct.iteritems():
+        json_models.append(value)
     bldgDct = {}
     jModDct = {}
     for i in range(0, len(json_models)):
