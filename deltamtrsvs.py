@@ -45,6 +45,7 @@ def get_bldg_models(model_url, bldgIDs, headers):
 
     return modelsJsonDct 
 
+
 def get_model_comparisons(comparison_url, modelsJsonDct, headers):
     """ Pass a list of models' data in .JSON format, return model IDs &
         comparisons's data in .JSON format """
@@ -126,3 +127,24 @@ def get_bldg_meters(bldg_meters_url, bldgIDs, headers):
         bldgMetersList.append(bldgMeterDct)
 
     return bldgMetersList
+
+def get_energy_rates(bldgMetersList, auditSpans, meter_records_url,
+                         headers):
+    """ Takes the dictionary of date ranges from amsaves_usage_range function
+        and building meter IDs from get_building_meters function returns
+        energy cost rate for both (electric & gas) common fuels"""
+
+    i = 0
+    for key, value in auditSpans.iteritems():
+        elecBegin = auditSpans[key]['E. Per. Begin']
+        elecEnd = auditSpans[key]['E. Per. End']
+        gasBegin = auditSpans[key]['G. Per. Begin']
+        gasEnd = auditSpans[key]['G. Per. End']
+        meterID = bldgMetersList[i]
+        elecMeter_record_url = pvt.meter_records_url + meterID + \
+                               '?start=' + elecBegin + '&end=' + elecEnd
+        elecMeterRecords = requests.get(meter_record_url, headers=headers)
+        gasMeter_record_url = pvt.meter_records_url + meterID + \
+                              '?start=' + gasBegin + '&end=' + gasEnd
+        gasMeterRecords = requests.get(meter_record_url, headers=headers)
+        i=i+1

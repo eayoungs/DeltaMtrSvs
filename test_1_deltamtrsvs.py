@@ -62,13 +62,14 @@ def test_get_model_comparisons():
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
-        (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
-                                                            headers)
+        modelsJsonDct = dms_api.get_bldg_models(model_url, bldgIDs, headers)
+        modelIDs = []
+        for key in modelsJsonDct:
+            modelIDs.append(str(key))
         (modelIDs, comparisons, jModDct) = dms_api.get_model_comparisons(
                                                                 comparison_url,
-                                                                json_models,
+                                                                modelsJsonDct,
                                                                 headers)
-
         assert type(modelIDs) == tp.ListType
         # assert len(modelIDs) >= len(valBldgIDs)
         assert [type(modelID)==tp.StringType for modelID in modelIDs]
@@ -76,18 +77,21 @@ def test_get_model_comparisons():
 
 
 def test_get_model_audits():
-    """ Pass a list of model IDs; confirm the funciton returns valid audit IDs and the expected audit data """ 
+    """ Pass a list of model IDs; confirm the funciton returns valid audit IDs
+        and the expected audit data """ 
 
     for site in sites:
         bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
-        (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
+        modelsJsonDct = dms_api.get_bldg_models(model_url, bldgIDs,
                                                             headers)
-
-        (refModels, audits) = dms_api.get_model_audits(audit_url,
-                                                           valBldgIDs, headers)
+        valBldgIDs = []
+        for key in modelsJsonDct:
+            valBldgIDs.append(str(key))
+        (refModels, audits) = dms_api.get_model_audits(audit_url, valBldgIDs,
+                                                       headers)
 
     type(refModels) == tp.ListType
     assert [type(refModel)==tp.StringType for refModel in refModels]
@@ -147,3 +151,24 @@ def test_get_bldg_meters():
                 else:
                     if bldgMeter[bldgID][1]["MeterTypeID"] == 2:
                         assert bldgMeter[bldgID][0]["MeterTypeID"] != 2
+
+#def test_get_energy_rates():
+#    """ """
+#
+#    for site in sites:
+#        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+#        bldgIDs = []
+#        for key in bldgIDct:
+#            bldgIDs.append(str(key))
+#        (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
+#                                                            headers)
+#        (modelIDs, comparisons, jModDct) = dms_api.get_model_comparisons(
+#                                                                comparison_url,
+#                                                                json_models,
+#                                                                headers)
+#        (refModelIDs, audits) = dms_api.get_model_audits(audit_url, modelIDs,
+#                                                         headers)
+#        auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
+#        bldgMetersList = dms_api.get_bldg_meters(pvt.bldg_meters_url, bldgIDs,
+#                                                 headers)
+#        energyRates = ams.amsaves_energy_rates(bldgMetersList, auditSpans)
