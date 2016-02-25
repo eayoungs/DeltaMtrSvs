@@ -37,7 +37,7 @@ def test_amsaves_results():
         for key in bldgIDct:
             bldgIDs.append(str(key))
         modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
-                                                      headers)
+                                                    headers)
         modelIDs = []
         for key in modelsJsonDct:
             modelIDs.append(str(key))
@@ -61,7 +61,8 @@ def test_am_saves_audit():
         (write contents to .CSV file for review) """
 
     for site in sites:
-        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
+                                                  headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
@@ -93,12 +94,16 @@ def test_amsaves_flags():
     """ """
 
     for site in sites:
-        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
+                                                  headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
         modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                             headers)
+        valBldgIDs = []
+        for key in modelsJsonDct:
+            valBldgIDs.append(str(key))
         fvCharts = deltamtrsvs.get_fv_charts(pvt.fv_charts_url, valBldgIDs,
                                          headers)
         flags = ams.amsaves_flags(fvCharts)
@@ -155,7 +160,8 @@ def test_amsaves_usage_range():
         """
 
     for site in sites:
-        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
+                                                  headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
@@ -165,8 +171,8 @@ def test_amsaves_usage_range():
                                                                 comparison_url,
                                                                 modelsJsonDct,
                                                                 headers)
-        (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url, modelIDs,
-                                                         headers)
+        (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url,
+                                                             modelIDs, headers)
         auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
 
         assert type(auditSpans) == tp.DictType
