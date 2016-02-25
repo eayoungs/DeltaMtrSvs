@@ -10,7 +10,7 @@ __license__ = "GNU Affero (GPLv3)"
 
 import types as tp
 import re
-import deltamtrsvs as dms_api
+import deltamtrsvs
 import private as pvt
 
 headers = pvt.headers
@@ -25,7 +25,7 @@ def test_get_property_bldgs():
     """ Pass an API URL, property id & header; confirm the fuction returns the
         expected bldg IDs """
     for site in sites:
-        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site, headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
@@ -41,11 +41,11 @@ def test_get_bldg_models():
         expected valid bldg IDs """
 
     for site in sites:
-        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site, headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
-        modelsJsonDct = dms_api.get_bldg_models(model_url, bldgIDs,
+        modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                             headers)
         for key in modelsJsonDct:
             assert type(modelsJsonDct) == tp.DictType
@@ -58,15 +58,17 @@ def test_get_model_comparisons():
         model IDs """
 
     for site in sites:
-        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
+                                                  headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
-        modelsJsonDct = dms_api.get_bldg_models(model_url, bldgIDs, headers)
+        modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
+                                                    headers)
         modelIDs = []
         for key in modelsJsonDct:
             modelIDs.append(str(key))
-        (modelIDs, comparisons, jModDct) = dms_api.get_model_comparisons(
+        (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
                                                                 comparison_url,
                                                                 modelsJsonDct,
                                                                 headers)
@@ -81,18 +83,18 @@ def test_get_model_audits():
         and the expected audit data """ 
 
     for site in sites:
-        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
+                                                  headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
-        modelsJsonDct = dms_api.get_bldg_models(model_url, bldgIDs,
+        modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                             headers)
         valBldgIDs = []
         for key in modelsJsonDct:
             valBldgIDs.append(str(key))
-        (refModels, audits) = dms_api.get_model_audits(audit_url, valBldgIDs,
-                                                       headers)
-
+        (refModels, audits) = deltamtrsvs.get_model_audits(audit_url,
+                                                           valBldgIDs, headers)
     type(refModels) == tp.ListType
     assert [type(refModel)==tp.StringType for refModel in refModels]
     assert [re.match('\d{4}', refModel) for refModel in refModels] 
@@ -103,14 +105,15 @@ def test_get_fv_charts():
         list of FirstView chart objects """
 
     diagnMsgCodes =[]
-
     for site in sites:
-        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
+                                                  headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
 
-        fvCharts = dms_api.get_fv_charts(pvt.fv_charts_url, bldgIDs, headers)
+        fvCharts = deltamtrsvs.get_fv_charts(pvt.fv_charts_url, bldgIDs,
+                                             headers)
         for fvChart in fvCharts:
             # TODO (eayoungs): Repeat selections & attribute assertions for
             #                  remaining fields
@@ -129,12 +132,13 @@ def test_get_bldg_meters():
     """ Pass a single building ID number; return a list of meter objects in
         .JSON format associated with the given building """
 
-    bldgIDct = dms_api.get_property_bldgs(properties_url, '43', headers)
+    bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, '43', headers)
     bldgIDs = []
     for key in bldgIDct:
         bldgIDs.append(str(key))
 
-    bldgMeters = dms_api.get_bldg_meters(pvt.bldg_meters_url, bldgIDs, headers)
+    bldgMeters = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url, bldgIDs,
+                                             headers)
 
     for bldgMeter in bldgMeters:
         for bldgID in bldgIDs:
@@ -156,19 +160,24 @@ def test_get_bldg_meters():
 #    """ """
 #
 #    for site in sites:
-#        bldgIDct = dms_api.get_property_bldgs(properties_url, site, headers)
+#        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
+#                                                  headers)
 #        bldgIDs = []
 #        for key in bldgIDct:
 #            bldgIDs.append(str(key))
-#        (json_models, valBldgIDs) = dms_api.get_bldg_models(model_url, bldgIDs,
+#        modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
 #                                                            headers)
-#        (modelIDs, comparisons, jModDct) = dms_api.get_model_comparisons(
+#        valBldgIDs = []
+#        for key, value in modelsJsonDct:
+#            valBldgIDs.append(str(value))
+#        (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
 #                                                                comparison_url,
 #                                                                json_models,
 #                                                                headers)
-#        (refModelIDs, audits) = dms_api.get_model_audits(audit_url, modelIDs,
-#                                                         headers)
+#        (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url,
+#                                                             modelIDs, headers)
 #        auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
-#        bldgMetersList = dms_api.get_bldg_meters(pvt.bldg_meters_url, bldgIDs,
-#                                                 headers)
+#        bldgMetersList = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url,
+#                                                     bldgIDs, headers)
 #        energyRates = ams.amsaves_energy_rates(bldgMetersList, auditSpans)
+#        assert energyRates
