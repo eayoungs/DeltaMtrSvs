@@ -51,17 +51,17 @@ def get_model_comparisons(comparison_url, modelsJsonDct, headers):
         comparisons's data in .JSON format """
     # TODO (eayoungs): Create a new function for this code block to be called
     #                  seperately; pass only modelIDs to this function
-    modelIDs = []
+    json_models = []
     for key, value in modelsJsonDct.iteritems():
-        modelIDs.append(value)
+        json_models.append(value)
     bldgDct = {}
     jModDct = {}
-    for i in range(0, len(modelIDs)):
+    for i in range(0, len(json_models)):
         modelDct = {}
-        for j in range(0, len(modelIDs[i])):
-            bldgID = modelIDs[i][j]['BuildingID']
-            modelID = str(modelIDs[i][j]['SolutionID'])
-            modelDesc = modelIDs[i][j]['SolutionType']
+        for j in range(0, len(json_models[i])):
+            bldgID = json_models[i][j]['BuildingID']
+            modelID = str(json_models[i][j]['SolutionID'])
+            modelDesc = json_models[i][j]['SolutionType']
             # TODO (eayoungs): Add error handling here: Else, cond not found
             if 'Reference Model' in modelDesc:
                 modelType = 'Reference Model'
@@ -69,7 +69,7 @@ def get_model_comparisons(comparison_url, modelsJsonDct, headers):
                 modelType = 'Proposed Model'
             modelDct[modelType] = modelID
         bldgDct[bldgID] = modelDct
-        jModDct[bldgID] = modelIDs[i]
+        jModDct[bldgID] = json_models[i]
 
     modelIDs = []
     compDct = {}
