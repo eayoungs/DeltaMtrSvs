@@ -137,25 +137,15 @@ def test_get_bldg_meters():
     for key in bldgIDct:
         bldgIDs.append(str(key))
 
-    bldgMeters = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url, bldgIDs,
+    bldgMeterDct = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url, bldgIDs,
                                              headers)
-
-    for bldgMeter in bldgMeters:
-        for bldgID in bldgIDs:
-            assert type(bldgMeter[bldgID]) == tp.ListType
-            assert len(bldgMeter[bldgID]) <= 2
-            if bldgMeter[bldgID] > 1:
-                if bldgMeter[bldgID][0]["MeterTypeID"] == 1:
-                    assert bldgMeter[bldgID][1]["MeterTypeID"] != 1
-                else:
-                    if bldgMeter[bldgID][0]["MeterTypeID"] == 1:
-                        assert bldgMeter[bldgID][1]["MeterTypeID"] != 1
-                if bldgMeter[bldgID][0]["MeterTypeID"] == 2:
-                    assert bldgMeter[bldgID][1]["MeterTypeID"] != 2
-                else:
-                    if bldgMeter[bldgID][1]["MeterTypeID"] == 2:
-                        assert bldgMeter[bldgID][0]["MeterTypeID"] != 2
-
+    assert type(bldgMeterDct) == tp.DictType
+    for key, value in bldgMeterDct.iteritems():
+        assert type(key) == tp.StringType
+        assert type(value) == tp.DictType
+        assert type(value) == tp.DictType
+        assert len(value) <= 2
+        
 #def test_get_energy_rates():
 #    """ """
 #

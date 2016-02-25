@@ -117,16 +117,20 @@ def get_fv_charts(fv_charts_url, bldgIDs, headers):
 
 def get_bldg_meters(bldg_meters_url, bldgIDs, headers):
     """ """
+    meterReadingDct = {}
     bldgMeterDct = {}
-    bldgMetersList = []
     for bldgID in bldgIDs:
         bldg_meter_url = bldg_meters_url + bldgID
         bldgMeters = requests.get(bldg_meter_url, headers=headers)
         jsonBldgMeters = bldgMeters.json()
-        bldgMeterDct[bldgID] = jsonBldgMeters
-        bldgMetersList.append(bldgMeterDct)
+        for jsonBldgMeter in jsonBldgMeters:
+            if jsonBldgMeter['MeterTypeID'] == 1:
+                meterReadingDct['Electricity'] = jsonBldgMeter
+            elif jsonBldgMeter['MeterTypeID'] == 2:
+                meterReadingDct['Gas'] = jsonBldgMeter
+        bldgMeterDct[bldgID] = meterReadingDct
 
-    return bldgMetersList
+    return bldgMeterDct
 
 def get_energy_rates(bldgMetersList, auditSpans, meter_records_url,
                          headers):
