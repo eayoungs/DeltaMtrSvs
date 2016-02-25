@@ -10,7 +10,6 @@ __license__ = "GNU Affero (GPLv3)"
 
 from collections import defaultdict
 import pandas as pd
-import requests
 
 
 def amsaves_results(compDct, jModDct, bldgIDct):
