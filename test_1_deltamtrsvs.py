@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Eric Allen Youngson"
-__email__ = "eric@scneco.com"
+__email__ = "eric@successionecological.com"
 __copyright__ = "Copyright 2015, Succession Ecological Services"
 __license__ = "GNU Affero (GPLv3)"
 
@@ -30,7 +30,6 @@ def test_get_property_bldgs():
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
-    
         assert type(bldgIDs) == tp.ListType
         # assert len(bldgIDs) > 0
         assert [type(bldgID)==tp.StringType for bldgID in bldgIDs]
@@ -47,6 +46,7 @@ def test_get_bldg_models():
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
+
         modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                             headers)
         for key in modelsJsonDct:
@@ -65,11 +65,13 @@ def test_get_model_comparisons():
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
+
         modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                     headers)
         modelIDs = []
         for key in modelsJsonDct:
             modelIDs.append(str(key))
+
         (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
                                                                 comparison_url,
                                                                 modelsJsonDct,
@@ -90,11 +92,13 @@ def test_get_model_audits():
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
+
         modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                     headers)
         valBldgIDs = []
         for key in modelsJsonDct:
             valBldgIDs.append(str(key))
+
         (refModels, audits) = deltamtrsvs.get_model_audits(audit_url,
                                                            valBldgIDs, headers)
     type(refModels) == tp.ListType
@@ -113,6 +117,7 @@ def test_get_fv_charts():
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
+
         fvCharts = deltamtrsvs.get_fv_charts(pvt.fv_charts_url, bldgIDs,
                                              headers)
         for fvChart in fvCharts:
@@ -121,7 +126,6 @@ def test_get_fv_charts():
             diagnstcs = fvChart['Diagnostics']
             msgCode = [diagnstc['MessageCode'] for diagnstc in diagnstcs]
             diagnMsgCodes.append(msgCode)
-
             assert len(msgCode) == 10
             assert [type(diagnstc['MessageCode'])==tp.StringType for diagnstc
                     in diagnstcs]
@@ -139,6 +143,7 @@ def test_get_bldg_meters():
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
+
         bldgMeterDct = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url, bldgIDs
                                                    , headers)
         assert type(bldgMeterDct) == tp.DictType
@@ -158,6 +163,7 @@ def test_get_meter_records():
     bldgIDs = []
     for key in bldgIDct:
         bldgIDs.append(str(key))
+        
     modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                         headers)
     (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Eric Allen Youngson"
-__email__ = "eric@scneco.com"
+__email__ = "eric@successionecological.com"
 __copyright__ = "Copyright 2015, Succession Ecological Services"
 __license__ = "GNU Affero (GPLv3)"
 
@@ -32,14 +32,12 @@ def amsaves_results(compDct, jModDct, bldgIDct):
         gasBaseLd = round((json_comps['ModelAValues'][2] + \
                            json_comps['ModelAValues'][4] + \
                            json_comps['ModelAValues'][6])/29.3072, 0)
-
         bldgID = bldgIDct[key]['BuildingID']
         customID = bldgIDct[key]['ExternalID']
         rSquare = jModDct[key][0]['R2Coefficient']
         iterQuant = jModDct[key][0]['IterationQty']
         bldgArea = jModDct[key][0]['SquareFeet']
         solnID = jModDct[key][0]['SolutionID']
-
         uses.append([bldgID, customID, rSquare, bldgArea, iterQuant, solnID,
                      elecKwhSavings, gasThermSavings, elecBaseLdKwh,
                      elecClgKwh, elecHtgKwh, gasSpcHtgTherm, gasBaseLd])
@@ -63,7 +61,6 @@ def am_saves_audit(refModelIDs, audits):
 
     names = ['[kWh/Mo.]', 'Units', '[W/SF]', 'Per. Start', 'Per. End',
              'Hrs. in Per.', 'Air Temp']
-
     combinedUsageDct = {}
     i = 0
     for audit in audits:
@@ -78,7 +75,6 @@ def am_saves_audit(refModelIDs, audits):
             hrsInPeriod = jsonAudit['DaysInPeriod']*24
             pwrDensity = jsonAudit['ElecWattsPerFt2']
             airTemp = jsonAudit['AirTemp']
-                
             if jsonAudit['UnitOfMeasure'] == 'KWH':
                 elecUsage.append([values, unitOfMeasure, pwrDensity,
                                  periodStartDate, periodEndDate, hrsInPeriod,
@@ -87,6 +83,7 @@ def am_saves_audit(refModelIDs, audits):
                 gasUsage.append([values, unitOfMeasure, pwrDensity,
                                 periodStartDate, periodEndDate, hrsInPeriod,
                                 airTemp])
+
         # TODO (eayoungs): Move data frame construction to test function; stick
         #                  deltameterservices.com structure, filter & , per
         #                  amsaves_flags()
@@ -115,7 +112,6 @@ def amsaves_flags(fvCharts):
                  'Cooling Efficiency',
                  'Data Consistency',
                  'Summer Gas Use']
-
     for fvChart in fvCharts:
         diagnstcs = fvChart['Diagnostics']
         msgCodeDfDct = defaultdict()
@@ -126,7 +122,8 @@ def amsaves_flags(fvCharts):
                 msgTxt = diagnstc['MessageText']
                 msgCodeDfDct[msgName] = [msgCode, msgTxt]
 
-        diagnMsgCodes.append(msgCodeDfDct) 
+        diagnMsgCodes.append(msgCodeDfDct)
+
     # TODO (eayoungs): Return tuple, add primary building IDs from
     # deltameterservices.com to return statment
     return diagnMsgCodes
@@ -150,6 +147,7 @@ def amsaves_usage_range(refModelIDs, audits):
         gasEnd = []
         spanData = {}
         jsonAudits = audit.json()
+
         for jsonAudit in jsonAudits:
             periodStartDate = str(jsonAudit['PeriodStartDate'])
             periodEndDate = str(jsonAudit['PeriodEndDate'])
@@ -159,6 +157,7 @@ def amsaves_usage_range(refModelIDs, audits):
             elif jsonAudit['UnitOfMeasure'] == 'THERM':
                 gasStart.append(periodStartDate)
                 gasEnd.append(periodEndDate)
+                
         elecSpanBegin = min(elecStart)
         elecSpanEnd = max(elecEnd)
         if len(gasStart) > 0:

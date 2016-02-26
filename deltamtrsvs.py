@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Eric Allen Youngson"
-__email__ = "eric@scneco.com"
+__email__ = "eric@successionecological.com"
 __copyright__ = "Copyright 2015, Succession Ecological Services"
 __license__ = "GNU Affero (GPLv3)"
 
@@ -23,7 +23,6 @@ def get_property_bldgs(properties_url, site, headers):
         property """
     
     bldgIDct = {}
-
     properties_endpt = properties_url + site
     bldgs = requests.get(properties_endpt, headers=headers).json()
     for bldg in bldgs:
@@ -55,6 +54,7 @@ def get_model_comparisons(comparison_url, modelsJsonDct, headers):
     json_models = []
     for key, value in modelsJsonDct.iteritems():
         json_models.append(value)
+
     bldgDct = {}
     jModDct = {}
     for i in range(0, len(json_models)):
@@ -82,7 +82,6 @@ def get_model_comparisons(comparison_url, modelsJsonDct, headers):
         # invalid comparisons
         comparison = requests.get(comparison_endpt, headers=headers)
         compDct[key] = comparison
-
         modelIDs.append(refModel)
         modelIDs.append(propModel)
 
@@ -101,6 +100,7 @@ def get_model_audits(audit_url, modelIDs, headers):
         audit_endpt = audit_url + refModelID
         audits.append(requests.get(audit_endpt, headers=headers))
     # TODO (eayoungs): Revise function to return a single object
+
     return (refModelIDs, audits)
 
 
@@ -109,7 +109,6 @@ def get_fv_charts(fv_charts_url, bldgIDs, headers):
         list of FirstView chart objects """
 
     fvCharts = []
-
     for bldgID in bldgIDs:
         fv_chart_url = fv_charts_url + bldgID
         fvChart = requests.get(fv_chart_url, headers=headers)
@@ -130,11 +129,13 @@ def get_bldg_meters(bldg_meters_url, bldgIDs, headers):
         bldg_meter_url = bldg_meters_url + bldgID
         bldgMeters = requests.get(bldg_meter_url, headers=headers)
         jsonBldgMeters = bldgMeters.json()
+
         for jsonBldgMeter in jsonBldgMeters:
             if jsonBldgMeter['MeterTypeID'] == 1:
                 meterReadingDct['Electricity'] = jsonBldgMeter
             elif jsonBldgMeter['MeterTypeID'] == 2:
                 meterReadingDct['Gas'] = jsonBldgMeter
+
         bldgMeterDct[bldgID] = meterReadingDct
 
     return bldgMeterDct

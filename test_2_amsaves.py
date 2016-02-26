@@ -46,6 +46,7 @@ def test_amsaves_results():
                                                                 modelsJsonDct,
                                                                 headers)
         usesDf = ams.amsaves_results(compDct, jModDct, bldgIDct)
+
         fname = site+'-results.csv'
         with open(fname, 'wb') as outf:
             outcsv = usesDf.to_csv(fname)
@@ -66,6 +67,7 @@ def test_am_saves_audit():
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
+
         modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                             headers)
         (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
@@ -83,6 +85,7 @@ def test_am_saves_audit():
             df = combinedUsageDct[refModelAdtID]
             # span = datetime.date.datefromtimestamp(df['Per. Start'])
             # print(span.max)
+
             fname = refModelAdtID + '-audit.csv'
             with open(fname, 'wb') as outf:
                 outcsv = df.to_csv(fname)
@@ -99,11 +102,13 @@ def test_amsaves_flags():
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
+
         modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                             headers)
         valBldgIDs = []
         for key in modelsJsonDct:
             valBldgIDs.append(str(key))
+
         fvCharts = deltamtrsvs.get_fv_charts(pvt.fv_charts_url, valBldgIDs,
                                          headers)
         flags = ams.amsaves_flags(fvCharts)
@@ -165,6 +170,7 @@ def test_amsaves_usage_range():
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
+
         modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                             headers)
         (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
@@ -174,9 +180,9 @@ def test_amsaves_usage_range():
         (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url,
                                                              modelIDs, headers)
         auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
-
         assert type(auditSpans) == tp.DictType
         # assert len(auditSpans) == len(refModelIDs)
+
         spans = []
         for key, value in auditSpans.iteritems():
             assert type(key) == tp.StringType
@@ -198,6 +204,7 @@ def test_amsaves_usage_range():
             #                  *else* statement
             spans.append(vals)
             df = pd.DataFrame(data=spans, columns=colNms)
+            
         fname = site +'-use_ranges.csv'
         with open(fname, 'wb') as outf:
             outcsv = df.to_csv(fname)
