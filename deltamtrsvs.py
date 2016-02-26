@@ -163,12 +163,13 @@ def get_meter_records(auditSpans, bldgMeterDct, meter_records_url, headers):
             elecMeterRecords = requests.get(elecMeter_record_url, \
                                             headers=headers)
             metersRecordsDct['Elec. Meter Records'] = elecMeterRecords.json()
-            elecMeterID = str(bldgMeter['Gas']['MeterID'])
-            gasMeter_record_url = meter_records_url + elecMeterID + '?start='\
-                                                  + gasBegin + '&end=' + gasEnd
-            gasMeterRecords = requests.get(elecMeter_record_url, \
-                                           headers=headers)
-            metersRecordsDct['Gas Meter Records'] = gasMeterRecords.json()
-            bldgMeterRecordsDct[key] = metersRecordsDct
+            if bldgMeter['Gas']['MeterID']:
+                elecMeterID = str(bldgMeter['Gas']['MeterID'])
+                gasMeter_record_url = meter_records_url + elecMeterID + '\
+                                          start=' + gasBegin + '&end=' + gasEnd
+                gasMeterRecords = requests.get(elecMeter_record_url, \
+                                               headers=headers)
+                metersRecordsDct['Gas Meter Records'] = gasMeterRecords.json()
+                bldgMeterRecordsDct[key] = metersRecordsDct
 
     return metersRecordsDct
