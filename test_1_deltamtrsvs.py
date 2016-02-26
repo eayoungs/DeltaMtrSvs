@@ -143,7 +143,6 @@ def test_get_bldg_meters():
     for key, value in bldgMeterDct.iteritems():
         assert type(key) == tp.StringType
         assert type(value) == tp.DictType
-        assert type(value) == tp.DictType
         assert len(value) <= 2
         
 #def test_get_energy_rates():
