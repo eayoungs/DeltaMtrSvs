@@ -116,7 +116,10 @@ def get_fv_charts(fv_charts_url, bldgIDs, headers):
     return fvCharts
 
 def get_bldg_meters(bldg_meters_url, bldgIDs, headers):
-    """ """
+    """ Takes a list of building ID numbers; returns a dictionary with
+        building IDs as keys and dictionaries of meter objects with the name
+        of the fuel type (Electricity or Gas) as keys """
+
     meterReadingDct = {}
     bldgMeterDct = {}
     for bldgID in bldgIDs:
@@ -132,10 +135,9 @@ def get_bldg_meters(bldg_meters_url, bldgIDs, headers):
 
     return bldgMeterDct
 
-def get_energy_rates(bldgMetersList, auditSpans, meter_records_url,
-                         headers):
+def get_energy_rates(bldgMetersList, auditSpans, meter_records_url, headers):
     """ Takes the dictionary of date ranges from amsaves_usage_range function
-        and building meter IDs from get_building_meters function returns
+        and building meter IDs from get_building_meters function; returns
         energy cost rate for both (electric & gas) common fuels"""
 
     i = 0
