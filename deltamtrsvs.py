@@ -140,22 +140,35 @@ def get_bldg_meters(bldg_meters_url, bldgIDs, headers):
     return bldgMeterDct
 
 
-def get_energy_rates(bldgMetersList, auditSpans, meter_records_url, headers):
-    """ Takes the dictionary of date ranges from amsaves_usage_range function
-        and building meter IDs from get_building_meters function; returns
-        energy cost rate for both (electric & gas) common fuels"""
+def get_meter_records(auditSpans, bldgMeterDct, meter_records_url, headers):
+    """ Takes a dictionary of date ranges from amsaves_usage_range function
+        and dictionary of meter objects from get_building_meters function;
+        returns a dictionary of dictionaries containing meter readings for
+        each fuel (electric & gas) with building IDs as keys """
 
-    i = 0
+    bldgMeterRecordsDct = {}
     for key, value in auditSpans.iteritems():
-        elecBegin = auditSpans[key]['E. Per. Begin']
-        elecEnd = auditSpans[key]['E. Per. End']
-        gasBegin = auditSpans[key]['G. Per. Begin']
-        gasEnd = auditSpans[key]['G. Per. End']
-        meterID = bldgMetersList[i]
-        elecMeter_record_url = pvt.meter_records_url + meterID + \
-                               '?start=' + elecBegin + '&end=' + elecEnd
-        elecMeterRecords = requests.get(meter_record_url, headers=headers)
-        gasMeter_record_url = pvt.meter_records_url + meterID + \
-                              '?start=' + gasBegin + '&end=' + gasEnd
-        gasMeterRecords = requests.get(meter_record_url, headers=headers)
-        i=i+1
+        metersRecordsDct = {}
+        elecBegin = value['E. Per. Begin']
+        elecEnd = value['E. Per. End']
+        if value > 2:
+            gasBegin = value['G. Per. Begin']
+            gasEnd = value['G. Per. End']
+
+        for key, value in bldgMeterDct.iteritems():
+            bldgMeter = value
+            elecMeterID = str(bldgMeter['Electricity']['MeterID'])
+            elecMeter_record_url = meter_records_url + elecMeterID + \
+                                   '?start=' + elecBegin + '&end=' + elecEnd
+            elecMeterRecords = requests.get(elecMeter_record_url, \
+                                            headers=headers)
+            metersRecordsDct['Elec. Meter Records'] = elecMeterRecords.json()
+            elecMeterID = str(bldgMeter['Gas']['MeterID'])
+            gasMeter_record_url = meter_records_url + elecMeterID + '?start='\
+                                                  + gasBegin + '&end=' + gasEnd
+            gasMeterRecords = requests.get(elecMeter_record_url, \
+                                           headers=headers)
+            metersRecordsDct['Gas Meter Records'] = gasMeterRecords.json()
+            bldgMeterRecordsDct[key] = metersRecordsDct
+
+    return metersRecordsDct

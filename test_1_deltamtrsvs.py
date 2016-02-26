@@ -11,6 +11,7 @@ __license__ = "GNU Affero (GPLv3)"
 import types as tp
 import re
 import deltamtrsvs
+import amsaves as ams
 import private as pvt
 
 headers = pvt.headers
@@ -41,7 +42,8 @@ def test_get_bldg_models():
         expected valid bldg IDs """
 
     for site in sites:
-        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
+                                                  headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
@@ -89,7 +91,7 @@ def test_get_model_audits():
         for key in bldgIDct:
             bldgIDs.append(str(key))
         modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
-                                                            headers)
+                                                    headers)
         valBldgIDs = []
         for key in modelsJsonDct:
             valBldgIDs.append(str(key))
@@ -111,7 +113,6 @@ def test_get_fv_charts():
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
-
         fvCharts = deltamtrsvs.get_fv_charts(pvt.fv_charts_url, bldgIDs,
                                              headers)
         for fvChart in fvCharts:
@@ -132,41 +133,44 @@ def test_get_bldg_meters():
     """ Pass a single building ID number; return a list of meter objects in
         .JSON format associated with the given building """
 
-    bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, '43', headers)
+    for site in sites:
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
+                                                  headers)
+        bldgIDs = []
+        for key in bldgIDct:
+            bldgIDs.append(str(key))
+        bldgMeterDct = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url, bldgIDs
+                                                   , headers)
+        assert type(bldgMeterDct) == tp.DictType
+        for key, value in bldgMeterDct.iteritems():
+            assert type(key) == tp.StringType
+            assert type(value) == tp.DictType
+            assert len(value) <= 2
+        
+def test_get_meter_records():
+    """ Pass a dictionary of *audit* spans from amsaves_usage_range with
+        reference model IDs from the amsaves_usage_range function as keys and
+        a list of meter IDs from get_bldg_meters function  """
+
+    #for site in sites:
+    bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, '43',
+                                              headers)
     bldgIDs = []
     for key in bldgIDct:
         bldgIDs.append(str(key))
-
-    bldgMeterDct = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url, bldgIDs,
-                                             headers)
-    assert type(bldgMeterDct) == tp.DictType
-    for key, value in bldgMeterDct.iteritems():
-        assert type(key) == tp.StringType
-        assert type(value) == tp.DictType
-        assert len(value) <= 2
-        
-#def test_get_energy_rates():
-#    """ """
-#
-#    for site in sites:
-#        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
-#                                                  headers)
-#        bldgIDs = []
-#        for key in bldgIDct:
-#            bldgIDs.append(str(key))
-#        modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
-#                                                            headers)
-#        valBldgIDs = []
-#        for key, value in modelsJsonDct:
-#            valBldgIDs.append(str(value))
-#        (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
-#                                                                comparison_url,
-#                                                                json_models,
-#                                                                headers)
-#        (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url,
-#                                                             modelIDs, headers)
-#        auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
-#        bldgMetersList = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url,
-#                                                     bldgIDs, headers)
-#        energyRates = ams.amsaves_energy_rates(bldgMetersList, auditSpans)
-#        assert energyRates
+    modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
+                                                        headers)
+    (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
+                                                            comparison_url,
+                                                            modelsJsonDct,
+                                                            headers)
+    (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url,
+                                                         modelIDs, headers)
+    auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
+    bldgMeterDct = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url, bldgIDs
+                                               , headers)
+    energyRates = deltamtrsvs.get_meter_records(auditSpans, bldgMeterDct,
+                                            pvt.meter_records_url, headers)
+    assert energyRates
+        #for key, value in energyRates.iteritems():
+        #    assert type(key) == tp.StringType
