@@ -56,6 +56,7 @@ def amsaves_results(compDct, jModDct, bldgIDct):
     #                  dataframes as in am_saves_audit, 
     return usesDf
 
+
 def am_saves_audit(refModelIDs, audits):
     """ Pass the results of get_model_audits function; produce audit of 
         results for the 'America Saves!' program as a DataFrame """
@@ -100,6 +101,7 @@ def am_saves_audit(refModelIDs, audits):
     #                  building IDs and reference model IDs from
     #                  deltameterservices.com, per amsaves_flags()
     return combinedUsageDct
+
 
 def amsaves_flags(fvCharts):
     """ Pass the results of get_fv_charts function; produce 'flags' formatted

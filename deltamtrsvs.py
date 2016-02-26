@@ -31,6 +31,7 @@ def get_property_bldgs(properties_url, site, headers):
 
     return bldgIDct
 
+
 def get_bldg_models(model_url, bldgIDs, headers):
     """ Pass a list of building IDs; return a list of building IDs for
         which valid data is available, and the data in .JSON format. """
@@ -87,6 +88,7 @@ def get_model_comparisons(comparison_url, modelsJsonDct, headers):
 
     return (modelIDs, compDct, jModDct)
 
+
 def get_model_audits(audit_url, modelIDs, headers):
     """ Pass a list of model IDs; return audit IDs and a list of audit data
         objects in .JSON format. """
@@ -100,6 +102,7 @@ def get_model_audits(audit_url, modelIDs, headers):
         audits.append(requests.get(audit_endpt, headers=headers))
     # TODO (eayoungs): Revise function to return a single object
     return (refModelIDs, audits)
+
 
 def get_fv_charts(fv_charts_url, bldgIDs, headers):
     """ Pass a URL, a list of building ID's and required API header; return a
@@ -115,8 +118,12 @@ def get_fv_charts(fv_charts_url, bldgIDs, headers):
 
     return fvCharts
 
+
 def get_bldg_meters(bldg_meters_url, bldgIDs, headers):
-    """ """
+    """ Takes a list of building ID numbers; returns a dictionary with
+        building IDs as keys and dictionaries of meter objects with the name
+        of the fuel type (Electricity or Gas) as keys """
+
     meterReadingDct = {}
     bldgMeterDct = {}
     for bldgID in bldgIDs:
@@ -132,10 +139,10 @@ def get_bldg_meters(bldg_meters_url, bldgIDs, headers):
 
     return bldgMeterDct
 
-def get_energy_rates(bldgMetersList, auditSpans, meter_records_url,
-                         headers):
+
+def get_energy_rates(bldgMetersList, auditSpans, meter_records_url, headers):
     """ Takes the dictionary of date ranges from amsaves_usage_range function
-        and building meter IDs from get_building_meters function returns
+        and building meter IDs from get_building_meters function; returns
         energy cost rate for both (electric & gas) common fuels"""
 
     i = 0
