@@ -214,3 +214,29 @@ def test_amsaves_billing_rate():
     """ Pass the results of get_meter_records, confirm results of
         amsaves_billing_rate function returns expected data types & structures
         """
+
+    bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, '43', headers)
+
+    bldgIDs = []
+    for key in bldgIDct:
+        bldgIDs.append(str(key))
+
+    modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
+                                                        headers)
+    (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
+                                                            comparison_url,
+                                                            modelsJsonDct,
+                                                            headers)
+    (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url,
+                                                         modelIDs, headers)
+    auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
+    bldgMeterDct = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url, bldgIDs
+                                               , headers)
+    metersRecordsDct = deltamtrsvs.get_meter_records(auditSpans, bldgMeterDct,
+                                                pvt.meter_records_url, headers)
+    bldgMeterRecordsDct = deltamtrsvs.get_meter_records(metersRecordsDct)
+    assert type(bldgMeterRecordsDct) == tp.DictType
+    assert len(bldgMeterRecordsDct) == len(metersRecordsDct)
+    for key, value in bldgMeterRecordsDct:
+        assert type(key) == tp.StringType
+        assert type(value) == tp.DictType
