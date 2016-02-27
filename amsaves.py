@@ -174,3 +174,11 @@ def amsaves_usage_range(refModelIDs, audits):
         i = i+1
 
     return auditSpans
+
+
+def amsaves_billing_rate():
+    """ Takes a dictionary of building meters with building IDs as keys, whose
+        values are dictionaries with named keys describing the fuel type
+        containing meter readings; returns a dictionary with building IDs as
+        keys containing a dictionary of cost & consumption values with
+        descriptive keys """

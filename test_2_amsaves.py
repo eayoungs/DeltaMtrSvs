@@ -208,3 +208,9 @@ def test_amsaves_usage_range():
         fname = site +'-use_ranges.csv'
         with open(fname, 'wb') as outf:
             outcsv = df.to_csv(fname)
+
+
+def test_amsaves_billing_rate():
+    """ Pass the results of get_meter_records, confirm results of
+        amsaves_billing_rate function returns expected data types & structures
+        """
