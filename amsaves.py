@@ -176,9 +176,32 @@ def amsaves_usage_range(refModelIDs, audits):
     return auditSpans
 
 
-def amsaves_billing_rate():
+def amsaves_billing_rate(bldgMeterRecordsDct):
     """ Takes a dictionary of building meters with building IDs as keys, whose
         values are dictionaries with named keys describing the fuel type
         containing meter readings; returns a dictionary with building IDs as
         keys containing a dictionary of cost & consumption values with
         descriptive keys """
+
+    bldgRatesDct = {}
+    for key, value in bldgMeterRecordsDct.iteritems():
+        utilityRateDct = {}
+        elecMeterRecords = value['Elec. Meter Records']
+        elecUse = sum([elecMeterRecord['TotalUnitsUsed'] for elecMeterRecord
+                       in elecMeterRecords])
+        elecCost = sum([elecMeterRecord['TotalUsageCost'] for elecMeterRecord
+                        in elecMeterRecords])
+        elecRate = elecCost / elecUse
+        utilityRateDct['Electric Rate'] = elecRate
+
+        if value['Gas Meter Records']:
+            gasMeterRecords = value['Gas Meter Records']
+            gasUse = sum([gasMeterRecord['TotalUnitsUsed'] for gasMeterRecord
+                          in gasMeterRecords])
+            gasCost = sum([gasMeterRecord['TotalUsageCost'] for gasMeterRecord
+                           in gasMeterRecords])
+            gasRate = gasCost / gasUse
+            utilityRateDct['Gas Rate'] = gasRate
+        bldgRatesDct[key] = utilityRateDct
+
+    return bldgRatesDct 

@@ -232,11 +232,13 @@ def test_amsaves_billing_rate():
     auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
     bldgMeterDct = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url, bldgIDs
                                                , headers)
-    metersRecordsDct = deltamtrsvs.get_meter_records(auditSpans, bldgMeterDct,
-                                                pvt.meter_records_url, headers)
-    bldgMeterRecordsDct = deltamtrsvs.get_meter_records(metersRecordsDct)
-    assert type(bldgMeterRecordsDct) == tp.DictType
-    assert len(bldgMeterRecordsDct) == len(metersRecordsDct)
-    for key, value in bldgMeterRecordsDct:
+    bldgMeterRecordsDct = deltamtrsvs.get_meter_records(auditSpans,
+                                                        bldgMeterDct,
+                                                        pvt.meter_records_url,
+                                                        headers)
+    bldgRatesDct = ams.amsaves_billing_rate(bldgMeterRecordsDct)
+    assert type(bldgRatesDct) == tp.DictType
+    assert len(bldgRatesDct) == len(bldgMeterRecordsDct)
+    for key, value in bldgRatesDct.iteritems():
         assert type(key) == tp.StringType
         assert type(value) == tp.DictType
