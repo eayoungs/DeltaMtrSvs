@@ -149,13 +149,13 @@ def get_meter_records(auditSpans, bldgMeterDct, meter_records_url, headers):
 
     bldgMeterRecordsDct = {}
     for key, value in auditSpans.iteritems():
-        metersRecordsDct = {}
         elecBegin = value['E. Per. Begin']
         elecEnd = value['E. Per. End']
         if value > 2:
             gasBegin = value['G. Per. Begin']
             gasEnd = value['G. Per. End']
 
+        metersRecordsDct = {}
         for key, value in bldgMeterDct.iteritems():
             bldgMeter = value
             elecMeterID = str(bldgMeter['Electricity']['MeterID'])
@@ -171,6 +171,6 @@ def get_meter_records(auditSpans, bldgMeterDct, meter_records_url, headers):
                 gasMeterRecords = requests.get(elecMeter_record_url, \
                                                headers=headers)
                 metersRecordsDct['Gas Meter Records'] = gasMeterRecords.json()
-                bldgMeterRecordsDct[key] = metersRecordsDct
+            bldgMeterRecordsDct[key] = metersRecordsDct
 
-    return metersRecordsDct
+    return bldgMeterRecordsDct

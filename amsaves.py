@@ -157,7 +157,7 @@ def amsaves_usage_range(refModelIDs, audits):
             elif jsonAudit['UnitOfMeasure'] == 'THERM':
                 gasStart.append(periodStartDate)
                 gasEnd.append(periodEndDate)
-                
+
         elecSpanBegin = min(elecStart)
         elecSpanEnd = max(elecEnd)
         if len(gasStart) > 0:

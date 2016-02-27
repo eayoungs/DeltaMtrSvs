@@ -8,6 +8,7 @@ __license__ = "GNU Affero (GPLv3)"
 """ This module provides functions for requesting results from the DeltaMeter
     Services API * deltameterservices.com * """
 
+import json
 import types as tp
 import re
 import deltamtrsvs
@@ -163,7 +164,7 @@ def test_get_meter_records():
     bldgIDs = []
     for key in bldgIDct:
         bldgIDs.append(str(key))
-        
+
     modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                         headers)
     (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
@@ -175,8 +176,13 @@ def test_get_meter_records():
     auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
     bldgMeterDct = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url, bldgIDs
                                                , headers)
-    energyRates = deltamtrsvs.get_meter_records(auditSpans, bldgMeterDct,
+    metersRecordsDct = deltamtrsvs.get_meter_records(auditSpans, bldgMeterDct,
                                             pvt.meter_records_url, headers)
-    assert energyRates
-        #for key, value in energyRates.iteritems():
-        #    assert type(key) == tp.StringType
+    assert metersRecordsDct
+    for key, value in metersRecordsDct.iteritems():
+        assert type(key) == tp.StringType
+        assert type(value) == tp.DictType
+        assert len(value) <= 2
+        elecMtrVals = value['Elec. Meter Records']
+        assert type(elecMtrVals) == tp.ListType
+        assert [type(elecMtrVal) == tp.DictType for elecMtrVal in elecMtrVals]
