@@ -215,7 +215,8 @@ def test_amsaves_billing_rate():
         amsaves_billing_rate function returns expected data types & structures
         """
 
-    bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, '43', headers)
+    site = '43'
+    bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site, headers)
 
     bldgIDs = []
     for key in bldgIDct:
@@ -239,6 +240,20 @@ def test_amsaves_billing_rate():
     bldgRatesDct = ams.amsaves_billing_rate(bldgMeterRecordsDct)
     assert type(bldgRatesDct) == tp.DictType
     assert len(bldgRatesDct) == len(bldgMeterRecordsDct)
+    rates = []
     for key, value in bldgRatesDct.iteritems():
         assert type(key) == tp.StringType
         assert type(value) == tp.DictType
+        if len(value) > 1:
+            # TODO (eayoungs): Add 'UnitOfMeasure' to amsaves_billing_rate
+            #                  function
+            colNms = ['Bldg ID', '$/kWh','$/Therm']
+            rates.append([key, value['Electric Rate'], value['Gas Rate']])
+        else:
+            colNms = ['Bldg ID', '$/kWh']
+            rates.append([key, value['Electric Rate']])
+
+    df = pd.DataFrame(data=rates, columns=colNms)
+    fname = site +'-billing_rates.csv'
+    with open(fname, 'wb') as outf:
+        outcsv = df.to_csv(fname)
