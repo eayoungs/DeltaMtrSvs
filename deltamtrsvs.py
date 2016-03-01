@@ -32,18 +32,28 @@ def get_property_bldgs(properties_url, site, headers):
 
 
 def get_bldg_models(model_url, bldgIDs, headers):
-    """ Pass a list of building IDs; return a list of building IDs for
-        which valid data is available, and the data in .JSON format. """
+    """ Pass a list of building IDs; return a dictionary of with building IDs
+        as keys and dictionaries containing model objects in .JSON format,
+        having descriptive keys describing the model type contained within """ 
 
-    modelsJsonDct = {}
-    valBldgIDs = []
+    bldgModelsDct = {}
     for bldgID in bldgIDs:
         model_endpt = model_url + bldgID
         models = requests.get(model_endpt, headers=headers)
         if requests.get(model_endpt, headers=headers):
-                modelsJsonDct[bldgID] = models.json()
+            jsonModels = models.json()
+            jsonModelsDct = {}
+            for jsonModel in jsonModels:
+                if 'Reference Model' in jsonModel['SolutionType']:
+                    jsonModelsDct['Reference Model'] = jsonModel
+                elif 'Proposed Model' in jsonModel['SolutionType']:
+                    jsonModelsDct['Proposed Model'] = jsonModel
+                else:
+                    # TODO (eayoungs): Create & raise custom exception here
+                    jsonModelsDct['Test'] = 'FAIL'
+            bldgModelsDct[bldgID] = jsonModelsDct
 
-    return modelsJsonDct 
+    return bldgModelsDct 
 
 
 def get_model_comparisons(comparison_url, modelsJsonDct, headers):
