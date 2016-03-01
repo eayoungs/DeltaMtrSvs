@@ -53,49 +53,26 @@ def get_bldg_models(model_url, bldgIDs, headers):
                     jsonModelsDct['Test'] = 'FAIL'
             bldgModelsDct[bldgID] = jsonModelsDct
 
-    return bldgModelsDct 
+    return bldgModelsDct
 
 
-def get_model_comparisons(comparison_url, modelsJsonDct, headers):
+def get_model_comparisons(comparison_url, bldgModelsDct, headers):
     """ Pass a list of models' data in .JSON format, return model IDs &
         comparisons's data in .JSON format """
-    # TODO (eayoungs): Create a new function for this code block to be called
-    #                  seperately; pass only modelIDs to this function
-    json_models = []
-    for key, value in modelsJsonDct.iteritems():
-        json_models.append(value)
-
-    bldgDct = {}
-    jModDct = {}
-    for i in range(0, len(json_models)):
-        modelDct = {}
-        for j in range(0, len(json_models[i])):
-            bldgID = json_models[i][j]['BuildingID']
-            modelID = str(json_models[i][j]['SolutionID'])
-            modelDesc = json_models[i][j]['SolutionType']
-            # TODO (eayoungs): Add error handling here: Else, cond not found
-            if 'Reference Model' in modelDesc:
-                modelType = 'Reference Model'
-            elif 'Proposed Model' in modelDesc:
-                modelType = 'Proposed Model'
-            modelDct[modelType] = modelID
-        bldgDct[bldgID] = modelDct
-        jModDct[bldgID] = json_models[i]
 
     modelIDs = []
-    compDct = {}
-    for key, value in bldgDct.items():
-        refModel = bldgDct[key]['Reference Model']
-        propModel = bldgDct[key]['Proposed Model']
+    comparisonsDct = {}
+    for key, value in bldgModelsDct.iteritems():
+        jsonModelsDct = value
+        refModel = str(jsonModelsDct['Reference Model']['SolutionID'])
+        propModel = str(jsonModelsDct['Proposed Model']['SolutionID'])
         comparison_endpt = comparison_url + refModel +'/1/' + propModel + '/1/'
-        # TODO (eayoungs): Add error msgs. & exception handling to account for
-        # invalid comparisons
+            # TODO (eayoungs): Add error msgs. & exception handling to account
+            #                  for invalid comparisons
         comparison = requests.get(comparison_endpt, headers=headers)
-        compDct[key] = comparison
-        modelIDs.append(refModel)
-        modelIDs.append(propModel)
+        comparisonsDct[key] = comparison.json()
 
-    return (modelIDs, compDct, jModDct)
+    return comparisonsDct 
 
 
 def get_model_audits(audit_url, modelIDs, headers):

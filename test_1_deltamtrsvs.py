@@ -27,10 +27,12 @@ def test_get_property_bldgs():
     """ Pass an API URL, property id & header; confirm the fuction returns the
         expected bldg IDs """
     for site in sites:
-        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
+                                                  headers)
         bldgIDs = []
         for key in bldgIDct:
             bldgIDs.append(str(key))
+
         assert type(bldgIDs) == tp.ListType
         # assert len(bldgIDs) > 0
         assert [type(bldgID)==tp.StringType for bldgID in bldgIDs]
@@ -80,20 +82,18 @@ def test_get_model_comparisons():
         for key in bldgIDct:
             bldgIDs.append(str(key))
 
-        modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
+        bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                     headers)
-        modelIDs = []
-        for key in modelsJsonDct:
-            modelIDs.append(str(key))
-
-        (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
+        comparisonsDct = deltamtrsvs.get_model_comparisons(
                                                                 comparison_url,
-                                                                modelsJsonDct,
+                                                                bldgModelsDct,
                                                                 headers)
-        assert type(modelIDs) == tp.ListType
-        # assert len(modelIDs) >= len(valBldgIDs)
-        assert [type(modelID)==tp.StringType for modelID in modelIDs]
-        assert [re.match('\d{4}', modelID) for modelID in modelIDs]
+        assert type(comparisonsDct) == tp.DictType
+        #assert len(comparisonsDct) == 0
+        for key, value in comparisonsDct.iteritems():
+            assert type(key) == tp.StringType
+            assert type(value) == tp.DictType
+            #assertlen(value) == 0
 
 
 def test_get_model_audits():
