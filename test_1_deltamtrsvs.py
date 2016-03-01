@@ -178,12 +178,17 @@ def test_get_meter_records():
     for key in bldgIDct:
         bldgIDs.append(str(key))
 
-    modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
-                                                        headers)
-    (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
-                                                            comparison_url,
-                                                            modelsJsonDct,
-                                                            headers)
+    bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
+                                                headers)
+    modelIDs = []
+    for key, value in bldgModelsDct.iteritems():
+        jsonModelsDct = value
+        for key, value in jsonModelsDct.iteritems():
+            modelIDs.append(str(value['SolutionID']))
+            
+    comparisonsDct = deltamtrsvs.get_model_comparisons(comparison_url,
+                                                       bldgModelsDct,
+                                                       headers)
     (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url,
                                                          modelIDs, headers)
     auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
