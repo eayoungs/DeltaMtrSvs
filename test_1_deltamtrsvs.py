@@ -38,11 +38,8 @@ def test_get_property_bldgs():
 
 
 def test_get_bldg_models():
-    """ Pass a list of building IDs & header, confirm the fuction returns a
-        dictionary, with buildign IDs as keys, containing dictionaries of
-        model objects in .JSON format (themselves dictionaries of key: value
-        pairs), having keys describing the model type (Reference or Proposed)
-        """
+    """ Pass a list of bldg ids & header, confirm the fuction returns the
+        expected valid bldg IDs """
 
     for site in sites:
         bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
@@ -51,22 +48,12 @@ def test_get_bldg_models():
         for key in bldgIDct:
             bldgIDs.append(str(key))
 
-        bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
-                                                    headers)
-        assert len(bldgModelsDct) <= bldgIDs
-        for key, value in bldgModelsDct.iteritems():
+        modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
+                                                            headers)
+        for key in modelsJsonDct:
+            assert type(modelsJsonDct) == tp.DictType
             assert type(key)==tp.StringType 
             assert re.match('\d{4}', key)
-            assert type(value) == tp.DictType
-            assert len(value) == 2
-            jsonModelsDct = value
-            #assert value['Reference Model'] != value['Proposed Model']
-            for key, value in jsonModelsDct.iteritems():
-                assert type(key) == tp.StringType
-                assert key == 'Proposed Model' or key == 'Reference Model'
-                assert type(value) == tp.DictType
-                assert len(value) == 47
-                assert value != 'FAIL'
 
 
 def test_get_model_comparisons():
@@ -202,4 +189,4 @@ def test_get_meter_records():
         gasMtrVals = value['Gas Meter Records']
         assert type(gasMtrVals) == tp.ListType
         assert [type(gasMtrVal) == tp.DictType for gasMtrVal in gasMtrVals]
-        #assert elecMtrVals != gasMtrVals
+        assert elecMtrVals != gasMtrVals
