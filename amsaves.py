@@ -56,18 +56,15 @@ def amsaves_results(comparisonsDct, bldgModelsDct, bldgIDct):
     return usesDf
 
 
-def am_saves_audit(refModelIDs, audits):
+def amsaves_audit(audits):
     """ Pass the results of get_model_audits function; produce audit of 
         results for the 'America Saves!' program as a DataFrame """
 
-    names = ['[kWh/Mo.]', 'Units', '[W/SF]', 'Per. Start', 'Per. End',
-             'Hrs. in Per.', 'Air Temp']
     combinedUsageDct = {}
-    i = 0
-    for audit in audits:
+    for key, value in audits.iteritems():
         elecUsage = []
         gasUsage = []
-        jsonAudits = audit.json()
+        jsonAudits = value
         for jsonAudit in jsonAudits:
             values = jsonAudit['TotalUnitsUsed']
             unitOfMeasure = jsonAudit['UnitOfMeasure']
@@ -88,16 +85,13 @@ def am_saves_audit(refModelIDs, audits):
         # TODO (eayoungs): Move data frame construction to test function; stick
         #                  deltameterservices.com structure, filter & , per
         #                  amsaves_flags()
+        names = ['[kWh/Mo.]', 'Units', '[W/SF]', 'Per. Start', 'Per. End',
+                 'Hrs. in Per.', 'Air Temp']
         gasUsageDf = pd.DataFrame(data=gasUsage, columns=names)
         elecUsageDf = pd.DataFrame(data=elecUsage, columns=names)
         combinedUsageDf = pd.concat([gasUsageDf, elecUsageDf], axis=1)
-        combinedUsageDct[refModelIDs[i]] = combinedUsageDf
-        i=i+1
+        combinedUsageDct[key] = combinedUsageDf
 
-    # TODO (eayoungs): Remove refModelIDs from return statement, revise
-    #                  combinedUsageDct to a nested dictionary with primary
-    #                  building IDs and reference model IDs from
-    #                  deltameterservices.com, per amsaves_flags()
     return combinedUsageDct
 
 
@@ -140,15 +134,13 @@ def amsaves_usage_range(refModelIDs, audits):
         Saves!' program """
 
     auditSpans = {}
-    i = 0
-    for audit in audits:
+    for key, value in audits.iteritems():
         elecStart = []
         elecEnd = []
         gasStart = []
         gasEnd = []
         spanData = {}
-        jsonAudits = audit.json()
-
+        jsonAudits = value
         for jsonAudit in jsonAudits:
             periodStartDate = str(jsonAudit['PeriodStartDate'])
             periodEndDate = str(jsonAudit['PeriodEndDate'])
@@ -171,8 +163,7 @@ def amsaves_usage_range(refModelIDs, audits):
         else:
             spanData['E. Per. Begin'] = elecSpanBegin
             spanData['E. Per. End'] = elecSpanEnd
-        auditSpans[refModelIDs[i]] = spanData
-        i = i+1
+        auditSpans[key] = spanData
 
     return auditSpans
 

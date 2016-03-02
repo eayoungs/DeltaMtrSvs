@@ -59,7 +59,7 @@ def test_amsaves_results():
     assert usesDf.shape[1] == 13
 
 
-def test_am_saves_audit():
+def test_amsaves_audit():
     """ Pass the results of get_model_audits function, confirm DataFrame
         returned in requested results format for the 'America Saves!' program
         (write contents to .CSV file for review) """
@@ -73,18 +73,16 @@ def test_am_saves_audit():
 
         bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                 headers)
-        modelIDs = []
+        refModelIDs = []
         for key, value in bldgModelsDct.iteritems():
-            jsonModelsDct = value
-            for key, value in jsonModelsDct.iteritems():
-                modelIDs.append(str(value['SolutionID']))
+            refModel = value['Reference Model']
+            refModelIDs.append(str(refModel['SolutionID']))
                 
         comparisonsDct = deltamtrsvs.get_model_comparisons(comparison_url,
                                                            bldgModelsDct,
                                                            headers)
-        (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url,
-                                                             modelIDs, headers)
-        combinedUsageDct = ams.am_saves_audit(refModelIDs, audits)
+        audits = deltamtrsvs.get_model_audits(audit_url, refModelIDs, headers)
+        combinedUsageDct = ams.amsaves_audit(audits)
 
         assert isinstance(combinedUsageDct, dict)
         assert len(combinedUsageDct) == len(refModelIDs)
@@ -181,17 +179,15 @@ def test_amsaves_usage_range():
 
         bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                 headers)
-        modelIDs = []
+        refModelIDs = []
         for key, value in bldgModelsDct.iteritems():
-            jsonModelsDct = value
-            for key, value in jsonModelsDct.iteritems():
-                modelIDs.append(str(value['SolutionID']))
+            refModel = value['Reference Model']
+            refModelIDs.append(str(refModel['SolutionID']))
                 
         comparisonsDct = deltamtrsvs.get_model_comparisons(comparison_url,
                                                            bldgModelsDct,
                                                            headers)
-        (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url,
-                                                            modelIDs, headers)
+        audits = deltamtrsvs.get_model_audits(audit_url, refModelIDs, headers)
         auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
         assert type(auditSpans) == tp.DictType
         # assert len(auditSpans) == len(refModelIDs)
@@ -228,37 +224,28 @@ def test_amsaves_billing_rate():
         amsaves_billing_rate function returns expected data types & structures
         """
 
+    #for site in sites:
     site = '46'
-    bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site, headers)
-
+    bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
+                                              headers)
     bldgIDs = []
     for key in bldgIDct:
         bldgIDs.append(str(key))
 
     bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
-                                                headers)
-    modelIDs = []
+                                            headers)
+    refModelIDs = []
     for key, value in bldgModelsDct.iteritems():
-        jsonModelsDct = value
-        for key, value in jsonModelsDct.iteritems():
-            modelIDs.append(str(value['SolutionID']))
-
-    bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
-                                                headers)
-    modelIDs = []
-    for key, value in bldgModelsDct.iteritems():
-        jsonModelsDct = value
-        for key, value in jsonModelsDct.iteritems():
-            modelIDs.append(str(value['SolutionID']))
-            
+        refModel = value['Reference Model']
+        refModelIDs.append(str(refModel['SolutionID']))
+                
     comparisonsDct = deltamtrsvs.get_model_comparisons(comparison_url,
                                                        bldgModelsDct,
                                                        headers)
-    (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url,
-                                                         modelIDs, headers)
+    audits = deltamtrsvs.get_model_audits(audit_url, refModelIDs, headers)
     auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
-    bldgMeterDct = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url, bldgIDs
-                                               , headers)
+    bldgMeterDct = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url, bldgIDs,
+                                               headers)
     bldgMeterRecordsDct = deltamtrsvs.get_meter_records(auditSpans,
                                                         bldgMeterDct,
                                                         pvt.meter_records_url,

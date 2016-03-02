@@ -48,12 +48,17 @@ def test_get_bldg_models():
         for key in bldgIDct:
             bldgIDs.append(str(key))
 
-        modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
+        bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                             headers)
-        for key in modelsJsonDct:
-            assert type(modelsJsonDct) == tp.DictType
+        for key, value in bldgModelsDct.iteritems():
+            assert type(value) == tp.DictType
             assert type(key)==tp.StringType 
             assert re.match('\d{4}', key)
+            jsonModelsDct = value
+            for key, value in jsonModelsDct.iteritems():
+                assert type(key) == tp.StringType
+                assert type(value) == tp.DictType
+
 
 
 def test_get_model_comparisons():
@@ -69,10 +74,9 @@ def test_get_model_comparisons():
 
         bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                     headers)
-        comparisonsDct = deltamtrsvs.get_model_comparisons(
-                                                                comparison_url,
-                                                                bldgModelsDct,
-                                                                headers)
+        comparisonsDct = deltamtrsvs.get_model_comparisons(comparison_url,
+                                                           bldgModelsDct,
+                                                           headers)
         assert type(comparisonsDct) == tp.DictType
         for key, value in comparisonsDct.iteritems():
             assert type(key) == tp.StringType
@@ -90,17 +94,24 @@ def test_get_model_audits():
         for key in bldgIDct:
             bldgIDs.append(str(key))
 
-        modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
-                                                    headers)
-        valBldgIDs = []
-        for key in modelsJsonDct:
-            valBldgIDs.append(str(key))
-
-        (refModels, audits) = deltamtrsvs.get_model_audits(audit_url,
-                                                           valBldgIDs, headers)
-    type(refModels) == tp.ListType
-    assert [type(refModel)==tp.StringType for refModel in refModels]
-    assert [re.match('\d{4}', refModel) for refModel in refModels] 
+        bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
+                                                headers)
+        modelIDs = []
+        for key, value in bldgModelsDct.iteritems():
+            jsonModelsDct = value
+            for key, value in jsonModelsDct.iteritems():
+                modelIDs.append(str(value['SolutionID']))
+                
+        comparisonsDct = deltamtrsvs.get_model_comparisons(comparison_url,
+                                                           bldgModelsDct,
+                                                           headers)
+        audits = deltamtrsvs.get_model_audits(audit_url, modelIDs, headers)
+        type(audits) == tp.DictType
+        for key, values in audits.iteritems():
+            assert re.match('\d{3}', key)
+            assert type(values) == tp.ListType
+            assert [type(value) == tp.DictType for value in \
+                    values]
 
 
 def test_get_fv_charts():
@@ -163,24 +174,24 @@ def test_get_meter_records():
 
     bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                 headers)
-    modelIDs = []
+    refModelIDs = []
     for key, value in bldgModelsDct.iteritems():
-        jsonModelsDct = value
-        for key, value in jsonModelsDct.iteritems():
-            modelIDs.append(str(value['SolutionID']))
-            
+        refModel = value['Reference Model']
+        refModelIDs.append(str(refModel['SolutionID']))
+                
     comparisonsDct = deltamtrsvs.get_model_comparisons(comparison_url,
                                                        bldgModelsDct,
                                                        headers)
-    (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url,
-                                                         modelIDs, headers)
+    audits = deltamtrsvs.get_model_audits(audit_url, refModelIDs, headers)
     auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
-    bldgMeterDct = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url, bldgIDs
-                                               , headers)
-    metersRecordsDct = deltamtrsvs.get_meter_records(auditSpans, bldgMeterDct,
-                                            pvt.meter_records_url, headers)
-    assert metersRecordsDct
-    for key, value in metersRecordsDct.iteritems():
+    bldgMeterDct = deltamtrsvs.get_bldg_meters(pvt.bldg_meters_url, bldgIDs,
+                                               headers)
+    bldgMeterRecordsDct = deltamtrsvs.get_meter_records(auditSpans,
+                                                        bldgMeterDct,
+                                                        pvt.meter_records_url,
+                                                        headers)
+    assert bldgMeterRecordsDct
+    for key, value in bldgMeterRecordsDct.iteritems():
         assert type(key) == tp.StringType
         assert type(value) == tp.DictType
         assert len(value) <= 2

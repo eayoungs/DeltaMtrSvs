@@ -75,20 +75,17 @@ def get_model_comparisons(comparison_url, bldgModelsDct, headers):
     return comparisonsDct 
 
 
-def get_model_audits(audit_url, modelIDs, headers):
+def get_model_audits(audit_url, refModelIDs, headers):
     """ Pass a list of model IDs; return audit IDs and a list of audit data
         objects in .JSON format. """
-    # TODO (eayoungs): Create a more explicit selection process to select
-    #                  models by type (ie 'Reference', or 'Proposed').
-    refModelIDs = modelIDs[::2]
 
-    audits = []
+    audits = {}
     for refModelID in refModelIDs:
         audit_endpt = audit_url + refModelID
-        audits.append(requests.get(audit_endpt, headers=headers))
+        audits[refModelID] = requests.get(audit_endpt, headers=headers).json()
     # TODO (eayoungs): Revise function to return a single object
 
-    return (refModelIDs, audits)
+    return audits
 
 
 def get_fv_charts(fv_charts_url, bldgIDs, headers):
@@ -144,6 +141,7 @@ def get_meter_records(auditSpans, bldgMeterDct, meter_records_url, headers):
 
         metersRecordsDct = {}
         for key, value in bldgMeterDct.iteritems():
+            bldgID = key
             bldgMeter = value
             elecMeterID = str(bldgMeter['Electricity']['MeterID'])
             elecMeter_record_url = meter_records_url + elecMeterID + \
@@ -158,6 +156,6 @@ def get_meter_records(auditSpans, bldgMeterDct, meter_records_url, headers):
                 gasMeterRecords = requests.get(gasMeter_record_url, \
                                                headers=headers)
                 metersRecordsDct['Gas Meter Records'] = gasMeterRecords.json()
-            bldgMeterRecordsDct[key] = metersRecordsDct
+            bldgMeterRecordsDct[bldgID] = metersRecordsDct
 
     return bldgMeterRecordsDct
