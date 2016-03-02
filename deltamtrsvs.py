@@ -26,7 +26,7 @@ def get_property_bldgs(properties_url, site, headers):
     properties_endpt = properties_url + site
     bldgs = requests.get(properties_endpt, headers=headers).json()
     for bldg in bldgs:
-        bldgIDct[bldg['BuildingID']] = bldg
+        bldgIDct[str(bldg['BuildingID'])] = bldg
 
     return bldgIDct
 
@@ -41,51 +41,38 @@ def get_bldg_models(model_url, bldgIDs, headers):
         model_endpt = model_url + bldgID
         models = requests.get(model_endpt, headers=headers)
         if requests.get(model_endpt, headers=headers):
-                modelsJsonDct[bldgID] = models.json()
+            jsonModels = models.json()
+            jsonModelsDct = {}
+            for jsonModel in jsonModels:
+                if 'Reference Model' in jsonModel['SolutionType']:
+                    jsonModelsDct['Reference Model'] = jsonModel
+                elif 'Proposed Model' in jsonModel['SolutionType']:
+                    jsonModelsDct['Proposed Model'] = jsonModel
+                else:
+                    # TODO (eayoungs): Create & raise custom exception here
+                    jsonModelsDct['Test'] = 'FAIL'
+            bldgModelsDct[bldgID] = jsonModelsDct
 
-    return modelsJsonDct 
+    return bldgModelsDct
 
 
-def get_model_comparisons(comparison_url, modelsJsonDct, headers):
+def get_model_comparisons(comparison_url, bldgModelsDct, headers):
     """ Pass a list of models' data in .JSON format, return model IDs &
         comparisons's data in .JSON format """
-    # TODO (eayoungs): Create a new function for this code block to be called
-    #                  seperately; pass only modelIDs to this function
-    json_models = []
-    for key, value in modelsJsonDct.iteritems():
-        json_models.append(value)
-
-    bldgDct = {}
-    jModDct = {}
-    for i in range(0, len(json_models)):
-        modelDct = {}
-        for j in range(0, len(json_models[i])):
-            bldgID = json_models[i][j]['BuildingID']
-            modelID = str(json_models[i][j]['SolutionID'])
-            modelDesc = json_models[i][j]['SolutionType']
-            # TODO (eayoungs): Add error handling here: Else, cond not found
-            if 'Reference Model' in modelDesc:
-                modelType = 'Reference Model'
-            elif 'Proposed Model' in modelDesc:
-                modelType = 'Proposed Model'
-            modelDct[modelType] = modelID
-        bldgDct[bldgID] = modelDct
-        jModDct[bldgID] = json_models[i]
 
     modelIDs = []
-    compDct = {}
-    for key, value in bldgDct.items():
-        refModel = bldgDct[key]['Reference Model']
-        propModel = bldgDct[key]['Proposed Model']
+    comparisonsDct = {}
+    for key, value in bldgModelsDct.iteritems():
+        jsonModelsDct = value
+        refModel = str(jsonModelsDct['Reference Model']['SolutionID'])
+        propModel = str(jsonModelsDct['Proposed Model']['SolutionID'])
         comparison_endpt = comparison_url + refModel +'/1/' + propModel + '/1/'
-        # TODO (eayoungs): Add error msgs. & exception handling to account for
-        # invalid comparisons
+            # TODO (eayoungs): Add error msgs. & exception handling to account
+            #                  for invalid comparisons
         comparison = requests.get(comparison_endpt, headers=headers)
-        compDct[key] = comparison
-        modelIDs.append(refModel)
-        modelIDs.append(propModel)
+        comparisonsDct[key] = comparison.json()
 
-    return (modelIDs, compDct, jModDct)
+    return comparisonsDct 
 
 
 def get_model_audits(audit_url, modelIDs, headers):
@@ -151,7 +138,7 @@ def get_meter_records(auditSpans, bldgMeterDct, meter_records_url, headers):
     for key, value in auditSpans.iteritems():
         elecBegin = value['E. Per. Begin']
         elecEnd = value['E. Per. End']
-        if value > 2:
+        if len(value) == 4:
             gasBegin = value['G. Per. Begin']
             gasEnd = value['G. Per. End']
 
@@ -164,11 +151,11 @@ def get_meter_records(auditSpans, bldgMeterDct, meter_records_url, headers):
             elecMeterRecords = requests.get(elecMeter_record_url, \
                                             headers=headers)
             metersRecordsDct['Elec. Meter Records'] = elecMeterRecords.json()
-            if bldgMeter['Gas']['MeterID']:
+            if len(bldgMeter) == 2:
                 elecMeterID = str(bldgMeter['Gas']['MeterID'])
                 gasMeter_record_url = meter_records_url + elecMeterID + '\
                                           start=' + gasBegin + '&end=' + gasEnd
-                gasMeterRecords = requests.get(elecMeter_record_url, \
+                gasMeterRecords = requests.get(gasMeter_record_url, \
                                                headers=headers)
                 metersRecordsDct['Gas Meter Records'] = gasMeterRecords.json()
             bldgMeterRecordsDct[key] = metersRecordsDct

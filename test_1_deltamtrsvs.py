@@ -27,14 +27,14 @@ def test_get_property_bldgs():
     """ Pass an API URL, property id & header; confirm the fuction returns the
         expected bldg IDs """
     for site in sites:
-        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site, headers)
+        bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
+                                                  headers)
         bldgIDs = []
-        for key in bldgIDct:
-            bldgIDs.append(str(key))
-        assert type(bldgIDs) == tp.ListType
-        # assert len(bldgIDs) > 0
-        assert [type(bldgID)==tp.StringType for bldgID in bldgIDs]
-        assert [re.match('\d{4}', bldgID) for bldgID in bldgIDs]
+        for key, value in bldgIDct.iteritems():
+            assert type(key) == tp.StringType
+            assert re.match('\d{4}', key)
+            assert type(value) == tp.DictType
+            assert len(value) > 0
 
 
 def test_get_bldg_models():
@@ -67,20 +67,16 @@ def test_get_model_comparisons():
         for key in bldgIDct:
             bldgIDs.append(str(key))
 
-        modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
+        bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                     headers)
-        modelIDs = []
-        for key in modelsJsonDct:
-            modelIDs.append(str(key))
-
-        (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
+        comparisonsDct = deltamtrsvs.get_model_comparisons(
                                                                 comparison_url,
-                                                                modelsJsonDct,
+                                                                bldgModelsDct,
                                                                 headers)
-        assert type(modelIDs) == tp.ListType
-        # assert len(modelIDs) >= len(valBldgIDs)
-        assert [type(modelID)==tp.StringType for modelID in modelIDs]
-        assert [re.match('\d{4}', modelID) for modelID in modelIDs]
+        assert type(comparisonsDct) == tp.DictType
+        for key, value in comparisonsDct.iteritems():
+            assert type(key) == tp.StringType
+            assert type(value) == tp.DictType
 
 
 def test_get_model_audits():
@@ -159,18 +155,23 @@ def test_get_meter_records():
         a list of meter IDs from get_bldg_meters function  """
 
     #for site in sites:
-    bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, '43',
-                                              headers)
+    site = '46'
+    bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site, headers)
     bldgIDs = []
     for key in bldgIDct:
         bldgIDs.append(str(key))
 
-    modelsJsonDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
-                                                        headers)
-    (modelIDs, comparisons, jModDct) = deltamtrsvs.get_model_comparisons(
-                                                            comparison_url,
-                                                            modelsJsonDct,
-                                                            headers)
+    bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
+                                                headers)
+    modelIDs = []
+    for key, value in bldgModelsDct.iteritems():
+        jsonModelsDct = value
+        for key, value in jsonModelsDct.iteritems():
+            modelIDs.append(str(value['SolutionID']))
+            
+    comparisonsDct = deltamtrsvs.get_model_comparisons(comparison_url,
+                                                       bldgModelsDct,
+                                                       headers)
     (refModelIDs, audits) = deltamtrsvs.get_model_audits(audit_url,
                                                          modelIDs, headers)
     auditSpans = ams.amsaves_usage_range(refModelIDs, audits)
@@ -186,7 +187,8 @@ def test_get_meter_records():
         elecMtrVals = value['Elec. Meter Records']
         assert type(elecMtrVals) == tp.ListType
         assert [type(elecMtrVal) == tp.DictType for elecMtrVal in elecMtrVals]
-        gasMtrVals = value['Gas Meter Records']
-        assert type(gasMtrVals) == tp.ListType
-        assert [type(gasMtrVal) == tp.DictType for gasMtrVal in gasMtrVals]
-        #assert elecMtrVals != gasMtrVals
+        if len(value) == 2:
+            gasMtrVals = value['Gas Meter Records']
+            assert type(gasMtrVals) == tp.ListType
+            assert [type(gasMtrVal) == tp.DictType for gasMtrVal in gasMtrVals]
+            assert elecMtrVals != gasMtrVals
