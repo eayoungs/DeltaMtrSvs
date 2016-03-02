@@ -13,32 +13,33 @@ import pandas as pd
 import requests
 
 
-def amsaves_results(compDct, jModDct, bldgIDct):
+def amsaves_results(comparisonsDct, bldgModelsDct, bldgIDct):
     """ Pass the results of get_model_comparisons function; produce requested 
         results for the 'America Saves!' program as a DataFrame """
 
     uses = []
-    for key, value in compDct.items():
-        json_comps = compDct[key].json()
-        elecKwhSavings = round(-json_comps['ElectricDifference'], 0)
-        gasThermSavings = round(-json_comps['GasDifference']/29.3072, 0)
-        elecBaseLdKwh = round(json_comps['ModelAValues'][1] + \
-                              json_comps['ModelAValues'][3] + \
-                              json_comps['ModelAValues'][5] + \
-                              json_comps['ModelAValues'][7], 0)
-        elecClgKwh = round(json_comps['ModelAValues'][0], 0)
-        elecHtgKwh = round(json_comps['ModelAValues'][8], 0)
-        gasSpcHtgTherm = round(json_comps['ModelAValues'][9]/29.3072, 0)
-        gasBaseLd = round((json_comps['ModelAValues'][2] + \
-                           json_comps['ModelAValues'][4] + \
-                           json_comps['ModelAValues'][6])/29.3072, 0)
-        bldgID = bldgIDct[key]['BuildingID']
-        customID = bldgIDct[key]['ExternalID']
-        rSquare = jModDct[key][0]['R2Coefficient']
-        iterQuant = jModDct[key][0]['IterationQty']
-        bldgArea = jModDct[key][0]['SquareFeet']
-        solnID = jModDct[key][0]['SolutionID']
-        uses.append([bldgID, customID, rSquare, bldgArea, iterQuant, solnID,
+    for key, value in comparisonsDct.iteritems():
+        elecKwhSavings = round(-value['ElectricDifference'], 0)
+        gasThermSavings = round(-value['GasDifference']/29.3072, 0)
+        elecBaseLdKwh = round(value['ModelAValues'][1] + \
+                              value['ModelAValues'][3] + \
+                              value['ModelAValues'][5] + \
+                              value['ModelAValues'][7], 0)
+        elecClgKwh = round(value['ModelAValues'][0], 0)
+        elecHtgKwh = round(value['ModelAValues'][8], 0)
+        gasSpcHtgTherm = round(value['ModelAValues'][9]/29.3072, 0)
+        gasBaseLd = round((value['ModelAValues'][2] + \
+                           value['ModelAValues'][4] + \
+                           value['ModelAValues'][6])/29.3072, 0)
+        bldgID = key
+        bldg = bldgIDct[key]
+        jsonModel = bldgModelsDct[key]['Reference Model']
+        customID = bldg['ExternalID']
+        rSquare = jsonModel['R2Coefficient']
+        iterQuant = jsonModel['IterationQty']
+        bldgArea = jsonModel['SquareFeet']
+        solnID = jsonModel['SolutionID']
+        uses.append([key, customID, rSquare, bldgArea, iterQuant, solnID,
                      elecKwhSavings, gasThermSavings, elecBaseLdKwh,
                      elecClgKwh, elecHtgKwh, gasSpcHtgTherm, gasBaseLd])
 
@@ -194,7 +195,7 @@ def amsaves_billing_rate(bldgMeterRecordsDct):
         elecRate = elecCost / elecUse
         utilityRateDct['Electric Rate'] = elecRate
 
-        if value['Gas Meter Records']:
+        if len(value) == 2:
             gasMeterRecords = value['Gas Meter Records']
             gasUse = sum([gasMeterRecord['TotalUnitsUsed'] for gasMeterRecord
                           in gasMeterRecords])

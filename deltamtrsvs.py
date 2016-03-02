@@ -26,7 +26,7 @@ def get_property_bldgs(properties_url, site, headers):
     properties_endpt = properties_url + site
     bldgs = requests.get(properties_endpt, headers=headers).json()
     for bldg in bldgs:
-        bldgIDct[bldg['BuildingID']] = bldg
+        bldgIDct[str(bldg['BuildingID'])] = bldg
 
     return bldgIDct
 
@@ -138,7 +138,7 @@ def get_meter_records(auditSpans, bldgMeterDct, meter_records_url, headers):
     for key, value in auditSpans.iteritems():
         elecBegin = value['E. Per. Begin']
         elecEnd = value['E. Per. End']
-        if value > 2:
+        if len(value) == 4:
             gasBegin = value['G. Per. Begin']
             gasEnd = value['G. Per. End']
 
@@ -151,11 +151,11 @@ def get_meter_records(auditSpans, bldgMeterDct, meter_records_url, headers):
             elecMeterRecords = requests.get(elecMeter_record_url, \
                                             headers=headers)
             metersRecordsDct['Elec. Meter Records'] = elecMeterRecords.json()
-            if bldgMeter['Gas']['MeterID']:
+            if len(bldgMeter) == 2:
                 elecMeterID = str(bldgMeter['Gas']['MeterID'])
                 gasMeter_record_url = meter_records_url + elecMeterID + '\
                                           start=' + gasBegin + '&end=' + gasEnd
-                gasMeterRecords = requests.get(elecMeter_record_url, \
+                gasMeterRecords = requests.get(gasMeter_record_url, \
                                                headers=headers)
                 metersRecordsDct['Gas Meter Records'] = gasMeterRecords.json()
             bldgMeterRecordsDct[key] = metersRecordsDct
