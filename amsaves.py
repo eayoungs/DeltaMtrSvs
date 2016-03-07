@@ -31,6 +31,8 @@ def amsaves_results(comparisonsDct, bldgModelsDct, bldgIDct):
         gasBaseLd = round((value['ModelAValues'][2] + \
                            value['ModelAValues'][4] + \
                            value['ModelAValues'][6])/29.3072, 0)
+        elecRatio = value['ElectricRatioA']
+        gasRatio = value['GasRatioA']
         bldgID = key
         bldg = bldgIDct[key]
         jsonModel = bldgModelsDct[key]['Reference Model']
@@ -41,13 +43,15 @@ def amsaves_results(comparisonsDct, bldgModelsDct, bldgIDct):
         solnID = jsonModel['SolutionID']
         uses.append([key, customID, rSquare, bldgArea, iterQuant, solnID,
                      elecKwhSavings, gasThermSavings, elecBaseLdKwh,
-                     elecClgKwh, elecHtgKwh, gasSpcHtgTherm, gasBaseLd])
+                     elecClgKwh, elecHtgKwh, gasSpcHtgTherm, gasBaseLd,
+                     elecRatio, gasRatio])
 
     names = ['Blg. ID', 'BldgEnergy ID', 'R2Coef.', 'Iterations',
              'Bldg. Area [ft2]', 'Solution ID', 'Electric Savings [kWh]',
              'Gas Savings [Therms]', 'Elec. Base-load [kWh]',
              'Elec. Cooling [kWh]', 'Elec. Heat [kWh]',
-             'Gas Space Heat [Therms]', 'Gas Base-load [Therms]']
+             'Gas Space Heat [Therms]', 'Gas Base-load [Therms]',
+             'Elec. True-up Ratio', 'Gas True-up Ratio']
 
     usesDf = pd.DataFrame(data=uses, columns=names)
     # TODO (eayoungs): Return a tuple, add primary building IDs from

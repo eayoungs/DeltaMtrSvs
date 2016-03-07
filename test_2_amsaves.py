@@ -56,7 +56,7 @@ def test_amsaves_results():
             outcsv = usesDf.to_csv(fname)
 
     assert isinstance(usesDf, pd.DataFrame)
-    assert usesDf.shape[1] == 13
+    assert usesDf.shape[1] == 15
 
 
 def test_amsaves_audit():
