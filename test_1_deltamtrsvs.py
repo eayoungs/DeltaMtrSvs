@@ -118,7 +118,6 @@ def test_get_fv_charts():
     """ Pass a URL, a list of moddle ID's and required API header; return a
         list of FirstView chart objects """
 
-    diagnMsgCodes =[]
     for site in sites:
         bldgIDct = deltamtrsvs.get_property_bldgs(properties_url, site,
                                                   headers)
@@ -128,7 +127,11 @@ def test_get_fv_charts():
 
         fvCharts = deltamtrsvs.get_fv_charts(pvt.fv_charts_url, bldgIDs,
                                              headers)
+        assert type(fvCharts) == tp.ListType
+        assert len(fvCharts) <= len(bldgIDs)
+        diagnMsgCodes =[]
         for fvChart in fvCharts:
+            assert type(fvChart) == tp.DictType
             # TODO (eayoungs): Repeat selections & attribute assertions for
             #                  remaining fields
             diagnstcs = fvChart['Diagnostics']
@@ -137,8 +140,6 @@ def test_get_fv_charts():
             assert len(msgCode) == 10
             assert [type(diagnstc['MessageCode'])==tp.StringType for diagnstc
                     in diagnstcs]
-
-        assert len(fvCharts) == len(bldgIDs)
 
 
 def test_get_bldg_meters():

@@ -95,9 +95,10 @@ def get_fv_charts(fv_charts_url, bldgIDs, headers):
     fvCharts = []
     for bldgID in bldgIDs:
         fv_chart_url = fv_charts_url + bldgID
-        fvChart = requests.get(fv_chart_url, headers=headers)
-        jsonFvChart = fvChart.json()
-        fvCharts.append(jsonFvChart)
+        if requests.get(fv_chart_url, headers=headers):
+            fvChart = requests.get(fv_chart_url, headers=headers)
+            jsonFvChart = fvChart.json()
+            fvCharts.append(jsonFvChart)
 
     return fvCharts
 
