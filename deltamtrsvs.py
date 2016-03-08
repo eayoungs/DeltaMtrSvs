@@ -100,13 +100,13 @@ def get_fv_charts(fv_charts_url, bldgIDs, headers):
     """ Pass a URL, a list of building ID's and required API header; return a
         list of FirstView chart objects """
 
-    fvCharts = []
+    fvCharts = {}
     for bldgID in bldgIDs:
         fv_chart_url = fv_charts_url + bldgID
         if requests.get(fv_chart_url, headers=headers):
             fvChart = requests.get(fv_chart_url, headers=headers)
             jsonFvChart = fvChart.json()
-            fvCharts.append(jsonFvChart)
+            fvCharts[bldgID] = jsonFvChart
 
     return fvCharts
 

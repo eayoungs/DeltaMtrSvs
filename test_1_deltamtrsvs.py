@@ -126,14 +126,16 @@ def test_get_fv_charts():
 
         fvCharts = deltamtrsvs.get_fv_charts(pvt.fv_charts_url, bldgIDs,
                                              headers)
-        assert type(fvCharts) == tp.ListType
+        assert type(fvCharts) == tp.DictType
         assert len(fvCharts) <= len(bldgIDs)
         diagnMsgCodes =[]
-        for fvChart in fvCharts:
-            assert type(fvChart) == tp.DictType
+        for key, value in fvCharts.iteritems():
+            assert type(key) == tp.StringType
+            assert re.match('\d{3}', key)
+            assert type(value) == tp.DictType
             # TODO (eayoungs): Repeat selections & attribute assertions for
             #                  remaining fields
-            diagnstcs = fvChart['Diagnostics']
+            diagnstcs = value['Diagnostics']
             msgCode = [diagnstc['MessageCode'] for diagnstc in diagnstcs]
             diagnMsgCodes.append(msgCode)
             assert len(msgCode) == 10

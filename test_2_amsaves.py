@@ -115,51 +115,50 @@ def test_amsaves_flags():
 
         fvCharts = deltamtrsvs.get_fv_charts(pvt.fv_charts_url, valBldgIDs,
                                          headers)
-        flags = ams.amsaves_flags(fvCharts)
+        diagnMsgCodes = ams.amsaves_flags(fvCharts)
         # TODO (eayoungs): Needs more robust assertions
-        assert [type(flag)==tp.StringType for flag in flags]
-
+        assert type(diagnMsgCodes) == tp.DictType
         siteFlags = []
-        for flag in flags:
-            bldgFlags = []
-            if flag['Occupant Load'][0] == 'A' or \
-                flag['Occupant Load'][0] == 'B' or \
-                flag['Occupant Load'][0] == 'C':
-                intrnElec = flag['Occupant Load'][0]
+        for key, value in diagnMsgCodes.iteritems():
+            bldgvalues = []
+            if value['Occupant Load'][0] == 'A' or \
+                value['Occupant Load'][0] == 'B' or \
+                value['Occupant Load'][0] == 'C':
+                intrnElec = value['Occupant Load'][0]
                 ultrHighIntExt = ''
-            elif flag['Occupant Load'][0] == 'O' or \
-                flag['Occupant Load'] == 'P':
-                ultrHighIntExt = flag['Occupant Load'][0]
+            elif value['Occupant Load'][0] == 'O' or \
+                value['Occupant Load'] == 'P':
+                ultrHighIntExt = value['Occupant Load'][0]
                 intrnElec = ''
             # TODO (eayoungs): Add exception handling for final *else*
             #                  statement
-            if flag['Summer Gas Use'][1] == "High":
+            if value['Summer Gas Use'][1] == "High":
                 highGasBaseLd = "M"
             else: highGasBaseLd = ""
 
-            bldgFlags = [intrnElec, ultrHighIntExt,
-                         flag['Controls Heating'][0],
-                         flag['Shell Ventilation'][0],
-                         flag['Controls Cooling'][0],
-                         flag['Cooling Efficiency'][0],
-                         flag['Data Consistency'][0],
+            bldgFlags = [key, intrnElec, ultrHighIntExt,
+                         value['Controls Heating'][0],
+                         value['Shell Ventilation'][0],
+                         value['Controls Cooling'][0],
+                         value['Cooling Efficiency'][0],
+                         value['Data Consistency'][0],
                          highGasBaseLd]
 
             siteFlags.append(bldgFlags)
-            assert len(bldgFlags) == 8
+            assert len(bldgFlags) == 9
             assert [type(bldgFlag) == tp.StringType for bldgFlag in bldgFlags]
             assert [len(bldgFlag) == 1 for bldgFlag in bldgFlags]
     
-            colNms = ['Int. Elec.', 'Ultra-High Elec.', 'Excessive Htg.',
-                      'Shell & Vent.', 'Excessive Clg', 'Inefficient Clg',
-                      'Erratic Operation', 'High Gas Eqp.']
+            colNms = ['Bldg ID','Int. Elec.', 'Ultra-High Elec.',
+                      'Excessive Htg.', 'Shell & Vent.', 'Excessive Clg',
+                      'Inefficient Clg', 'Erratic Operation', 'High Gas Eqp.']
             df = pd.DataFrame(data=siteFlags, columns=colNms)
 
             fname = site+'-flags.csv'
             with open(fname, 'wb') as outf:
                 outcsv = df.to_csv(fname)
 
-    assert len(siteFlags) == len(flags)
+    assert len(siteFlags) == len(diagnMsgCodes)
     assert len(fvCharts) <= len(bldgIDs)
 
 

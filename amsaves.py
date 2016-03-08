@@ -103,7 +103,7 @@ def amsaves_flags(fvCharts):
     """ Pass the results of get_fv_charts function; produce 'flags' formatted
         to specification of America Saves! project requirements """
 
-    diagnMsgCodes = []
+    diagnMsgCodes = {}
     dmsMsgNms = ['Occupant Load',
                  'Controls Heating',
                  'Shell Ventilation',
@@ -111,8 +111,8 @@ def amsaves_flags(fvCharts):
                  'Cooling Efficiency',
                  'Data Consistency',
                  'Summer Gas Use']
-    for fvChart in fvCharts:
-        diagnstcs = fvChart['Diagnostics']
+    for key, value in fvCharts.iteritems():
+        diagnstcs = value['Diagnostics']
         msgCodeDfDct = defaultdict()
         for diagnstc in diagnstcs:
             if diagnstc['MessageName'] in dmsMsgNms:
@@ -121,7 +121,7 @@ def amsaves_flags(fvCharts):
                 msgTxt = diagnstc['MessageText']
                 msgCodeDfDct[msgName] = [msgCode, msgTxt]
 
-        diagnMsgCodes.append(msgCodeDfDct)
+        diagnMsgCodes[key] = msgCodeDfDct
 
     # TODO (eayoungs): Return tuple, add primary building IDs from
     # deltameterservices.com to return statment
