@@ -132,7 +132,7 @@ def amsaves_flags(fvCharts):
 #                  readings will come from audit data)
 
 
-def amsaves_usage_range(refModelIDs, audits):
+def amsaves_usage_range(audits):
     """ Pass the results of get_model_audits function; produce time span of
         utility billing used in ma given model results for the 'America
         Saves!' program """

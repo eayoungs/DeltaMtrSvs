@@ -73,30 +73,28 @@ def test_amsaves_audit():
 
         bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                 headers)
-        refModelIDs = []
+        refModelsDct = {}
         for key, value in bldgModelsDct.iteritems():
-            refModel = value['Reference Model']
-            refModelIDs.append(str(refModel['SolutionID']))
+            refModelsDct[key] = value['Reference Model']
                 
         comparisonsDct = deltamtrsvs.get_model_comparisons(comparison_url,
                                                            bldgModelsDct,
                                                            headers)
-        audits = deltamtrsvs.get_model_audits(audit_url, refModelIDs, headers)
+        audits = deltamtrsvs.get_model_audits(audit_url, refModelsDct, headers)
         combinedUsageDct = ams.amsaves_audit(audits)
 
         assert isinstance(combinedUsageDct, dict)
-        assert len(combinedUsageDct) == len(refModelIDs)
+        assert len(combinedUsageDct) == len(audits)
 
-        for refModelAdtID in refModelIDs:
-            df = combinedUsageDct[refModelAdtID]
+        for key, value in combinedUsageDct.iteritems():
+            df = value
             # span = datetime.date.datefromtimestamp(df['Per. Start'])
             # print(span.max)
 
-            fname = refModelAdtID + '-audit.csv'
+            assert isinstance(combinedUsageDct[key], pd.DataFrame)
+            fname = key + '-audit.csv'
             with open(fname, 'wb') as outf:
                 outcsv = df.to_csv(fname)
-
-            assert isinstance(combinedUsageDct[refModelAdtID], pd.DataFrame)
 
 
 def test_amsaves_flags():
@@ -270,3 +268,4 @@ def test_amsaves_flags():
 #    fname = site +'-billing_rates.csv'
 #    with open(fname, 'wb') as outf:
 #        outcsv = df.to_csv(fname)
+#    assert len(fvCharts) == len(bldgIDs)

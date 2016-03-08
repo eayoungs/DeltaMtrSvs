@@ -75,14 +75,22 @@ def get_model_comparisons(comparison_url, bldgModelsDct, headers):
     return comparisonsDct 
 
 
-def get_model_audits(audit_url, refModelIDs, headers):
+def get_model_audits(audit_url, bldgModelsDct, headers):
     """ Pass a list of model IDs; return audit IDs and a list of audit data
         objects in .JSON format. """
 
+    bldgModelsDct = {}
+    for key, value in bldgModelsDct.iteritems():
+        bldgID = key
+        jsonModelsDct = value
+        for key, value in jsonModelsDct.iteritems():
+            bldgModelsDct[bldgID] = str(value['SolutionID'])
+
     audits = {}
-    for refModelID in refModelIDs:
-        audit_endpt = audit_url + refModelID
-        audits[refModelID] = requests.get(audit_endpt, headers=headers).json()
+    for key, value in bldgModelsDct:
+        modelID = value
+        audit_endpt = audit_url +modelID 
+        audits[modelID] = requests.get(audit_endpt, headers=headers).json()
     # TODO (eayoungs): Revise function to return a single object
 
     return audits
