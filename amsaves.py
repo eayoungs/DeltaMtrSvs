@@ -19,20 +19,20 @@ def amsaves_results(comparisonsDct, bldgModelsDct, bldgIDct):
 
     uses = []
     for key, value in comparisonsDct.iteritems():
-        elecKwhSavings = round(-value['ElectricDifference'], 0)
-        gasThermSavings = round(-value['GasDifference']/29.3072, 0)
-        elecBaseLdKwh = round(value['ModelAValues'][1] + \
-                              value['ModelAValues'][3] + \
-                              value['ModelAValues'][5] + \
-                              value['ModelAValues'][7], 0)
-        elecClgKwh = round(value['ModelAValues'][0], 0)
-        elecHtgKwh = round(value['ModelAValues'][8], 0)
-        gasSpcHtgTherm = round(value['ModelAValues'][9]/29.3072, 0)
-        gasBaseLd = round((value['ModelAValues'][2] + \
-                           value['ModelAValues'][4] + \
-                           value['ModelAValues'][6])/29.3072, 0)
         elecRatio = value['ElectricRatioA']
         gasRatio = value['GasRatioA']
+        elecKwhSavings = round(-value['ElectricDifference']*elecRatio, 0)
+        gasThermSavings = round(-value['GasDifference']/29.3072, 0)
+        elecBaseLdKwh = round(value['ModelAValues'][1]*elecRatio + \
+                              value['ModelAValues'][3]*elecRatio + \
+                              value['ModelAValues'][5]*elecRatio + \
+                              value['ModelAValues'][7]*elecRatio, 0)
+        elecClgKwh = round(value['ModelAValues'][0]*elecRatio, 0)
+        elecHtgKwh = round(value['ModelAValues'][8]*elecRatio, 0)
+        gasSpcHtgTherm = round(value['ModelAValues'][9]/29.3072*gasRatio, 0)
+        gasBaseLd = round((value['ModelAValues'][2]*gasRatio + \
+                           value['ModelAValues'][4]*gasRatio + \
+                           value['ModelAValues'][6])/29.3072*gasRatio, 0)
         bldgID = key
         bldg = bldgIDct[key]
         jsonModel = bldgModelsDct[key]['Reference Model']
