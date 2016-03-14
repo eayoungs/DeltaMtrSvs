@@ -37,16 +37,17 @@ def amsaves_results(comparisonsDct, bldgModelsDct, bldgIDct):
         bldg = bldgIDct[key]
         jsonModel = bldgModelsDct[key]['Reference Model']
         customID = bldg['ExternalID']
+        bldgName = bldg['BuildingName']
         rSquare = jsonModel['R2Coefficient']
         iterQuant = jsonModel['IterationQty']
         bldgArea = jsonModel['SquareFeet']
         solnID = jsonModel['SolutionID']
-        uses.append([key, customID, rSquare, bldgArea, iterQuant, solnID,
-                     elecKwhSavings, gasThermSavings, elecBaseLdKwh,
+        uses.append([key, customID, bldgName, rSquare, iterQuant, bldgArea,
+                     solnID, elecKwhSavings, gasThermSavings, elecBaseLdKwh,
                      elecClgKwh, elecHtgKwh, gasSpcHtgTherm, gasBaseLd,
                      elecRatio, gasRatio])
 
-    names = ['Blg. ID', 'BldgEnergy ID', 'R2Coef.', 'Iterations',
+    names = ['Blg. ID', 'BldgEnergy ID', 'Bldg Name', 'R2Coef.', 'Iterations',
              'Bldg. Area [ft2]', 'Solution ID', 'Electric Savings [kWh]',
              'Gas Savings [Therms]', 'Elec. Base-load [kWh]',
              'Elec. Cooling [kWh]', 'Elec. Heat [kWh]',

@@ -21,7 +21,7 @@ properties_url = pvt.properties_url
 model_url = pvt.model_url
 comparison_url = pvt.comparison_url
 audit_url = pvt.audit_url
-sites = [pvt.Middlesboro]#, pvt.FDL, pvt.HJSMS]
+sites = [pvt.Middlesboro, pvt.FDL, pvt.HJSMS]
 
 
 def test_amsaves_results():
@@ -56,7 +56,7 @@ def test_amsaves_results():
             outcsv = usesDf.to_csv(fname)
 
     assert isinstance(usesDf, pd.DataFrame)
-    assert usesDf.shape[1] == 15
+    assert usesDf.shape[1] == 16
 
 
 def test_amsaves_audit():
