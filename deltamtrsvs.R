@@ -38,10 +38,8 @@ DmsFmatAudit <- function(f.names){
 
     audit.data = audit.data[order(audit.data$Per..Start.1),]
     audit.data.lst[[i]] <- audit.data
-    # write.csv(audit.data, paste("out-", f.names[i]))
-  audit.data = data.frame(audit.data.lst[1])
+    write.csv(audit.data.lst, paste("out-", f.names[i]))
   }
-  return(audit.data)
 }
 
 DmsPlotUsePer <- function(df.name){
