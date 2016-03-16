@@ -33,10 +33,10 @@ DmsFmatAudit <- function(f.names){
     
     audit.data$Per..Start = as.Date(audit.data$Per..Start)
     audit.data$Per..End = as.Date(audit.data$Per..End)
-    audit.data$Per..Start.1 = as.Date(audit.data$Per..Start.1)
+    audit.data$Per..Start.1 = month(audit.data$Per..Start.1, label = TRUE)
     audit.data$Per..End.1 = as.Date(audit.data$Per..End.1)
 
-    audit.data = audit.data[order(month(audit.data$Per..Start.1)),]
+    audit.data = audit.data[order(audit.data$Per..Start.1),]
     audit.data.lst[[i]] <- audit.data
     # write.csv(audit.data, paste("out-", f.names[i]))
   audit.data = data.frame(audit.data.lst[1])

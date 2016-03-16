@@ -1,6 +1,7 @@
 # Data
 *.csv
 *.xls
+*.json
 
 # Sublime Text filz
 *.sublime-*
