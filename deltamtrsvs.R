@@ -38,7 +38,7 @@ DmsFmatAudit <- function(f.names){
 
     audit.data = audit.data[order(audit.data$Per..Start.1),]
     audit.data.lst[[i]] <- audit.data
-    write.csv(audit.data.lst, paste("out-", f.names[i]))
+    write.csv(audit.data.lst[i], paste("out-", f.names[i]))
   }
 }
 
