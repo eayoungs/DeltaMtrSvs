@@ -92,10 +92,12 @@ def amsaves_audit(audits):
         #                  amsaves_flags()
         names = ['[kWh/Mo.]', 'Units', '[W/SF]', 'Per. Start', 'Per. End',
                  'Hrs. in Per.', 'Air Temp']
-        gasUsageDf = pd.DataFrame(data=gasUsage, columns=names)
         elecUsageDf = pd.DataFrame(data=elecUsage, columns=names)
-        combinedUsageDf = pd.concat([gasUsageDf, elecUsageDf], axis=1)
-        combinedUsageDct[key] = combinedUsageDf
+        if gasUsage:
+            gasUsageDf = pd.DataFrame(data=gasUsage, columns=names)
+            combinedUsageDf = pd.concat([elecUsageDf, gasUsageDf], axis=1)
+            combinedUsageDct[key] = combinedUsageDf
+        else: combinedUsageDct[key] = elecUsageDf
 
     return combinedUsageDct
 

@@ -21,7 +21,7 @@ properties_url = pvt.properties_url
 model_url = pvt.model_url
 comparison_url = pvt.comparison_url
 audit_url = pvt.audit_url
-sites = [pvt.Middlesboro, pvt.FDL, pvt.HJSMS]
+sites = [pvt.Middlesboro]#, pvt.FDL, pvt.HJSMS]
 
 
 def test_amsaves_results():
@@ -88,9 +88,6 @@ def test_amsaves_audit():
 
         for key, value in combinedUsageDct.iteritems():
             df = value
-            # span = datetime.date.datefromtimestamp(df['Per. Start'])
-            # print(span.max)
-
             assert isinstance(value, pd.DataFrame)
             fname = key + '-audit.csv'
             with open(fname, 'wb') as outf:

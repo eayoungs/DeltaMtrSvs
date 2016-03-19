@@ -33,13 +33,15 @@ DmsFmatAudit <- function(f.names){
     
     audit.data$Per..Start = as.Date(audit.data$Per..Start)
     audit.data$Per..End = as.Date(audit.data$Per..End)
-    audit.data$Per..Start.1 = month(audit.data$Per..Start.1, label = TRUE)
+    audit.data$Per..Start.1 = as.Date(audit.data$Per..Start.1)
+    audit.data[["CalMo"]] = month(audit.data$Per..Start.1, label = TRUE)
     audit.data$Per..End.1 = as.Date(audit.data$Per..End.1)
 
-    audit.data = audit.data[order(audit.data$Per..Start.1),]
+    audit.data = audit.data[order(audit.data$CalMo),]
     audit.data.lst[[i]] <- audit.data
-    write.csv(audit.data.lst[i], paste("out-", f.names[i]))
+    # write.csv(audit.data.lst[i], paste("out-", f.names[i]))
   }
+  return(audit.data.lst[1])
 }
 
 DmsPlotUsePer <- function(df.name){
@@ -51,15 +53,15 @@ DmsPlotUsePer <- function(df.name){
   # Returns:
   #   pwr.tmp.mplot: 
   audit.data = read.csv(df.name, header = TRUE, stringsAsFactors = FALSE)
-  pwr.tmp.gas = qplot(audit.data[,"Hrs..in.Per."], audit.data[,"X.W.SF."], 
-                      main = "Gas", xlab = "Hrs. In Period", ylab = "[W/SF]",
-                      xlim = c(0,1000), color=audit.data[,"X.W.SF."]) +
-                      theme(color="red")
+  #pwr.tmp.gas = qplot(audit.data[,"Hrs..in.Per."], audit.data[,"X.W.SF."], 
+  #                    main = "Gas", xlab = "Hrs. In Period", ylab = "[W/SF]",
+  #                    xlim = c(0,1000), color=audit.data[,"X.W.SF."]) +
+  #                    theme(color="red")
   pwr.tmp.elec = qplot(audit.data[,"Hrs..in.Per..1"], audit.data[,"X.W.SF..1"],
                        main = "Elec.", xlab = "Hrs. In Period", ylab = "[W/SF]",
-                       xlim = c(0,1000), color=audit.data[,"X.W.SF..1"]) +
-                       theme(color="blue")
-  pwr.tmp.mplot = multiplot(pwr.tmp.elec, pwr.tmp.gas) #, title = "234")
+                       xlim = c(0,1000), color=audit.data[,"X.W.SF..1"])# +
+                       #theme(color="blue")
+  pwr.tmp.mplot = multiplot(pwr.tmp.elec)#, pwr.tmp.gas) #, title = "234")
 
   return(pwr.tmp.mplot)
 }
