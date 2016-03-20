@@ -53,16 +53,21 @@ DmsPlotUsePer <- function(df.name){
   # Returns:
   #   pwr.tmp.mplot: 
   audit.data = read.csv(df.name, header = TRUE, stringsAsFactors = FALSE)
-  #pwr.tmp.gas = qplot(audit.data[,"Hrs..in.Per."], audit.data[,"X.W.SF."], 
-  #                    main = "Gas", xlab = "Hrs. In Period", ylab = "[W/SF]",
-  #                    xlim = c(0,1000), color=audit.data[,"X.W.SF."]) +
-  #                    theme(color="red")
-  pwr.tmp.elec = qplot(audit.data[,"Hrs..in.Per..1"], audit.data[,"X.W.SF..1"],
-                       main = "Elec.", xlab = "Hrs. In Period", ylab = "[W/SF]",
-                       xlim = c(0,1000), color=audit.data[,"X.W.SF..1"])# +
-                       #theme(color="blue")
-  pwr.tmp.mplot = multiplot(pwr.tmp.elec)#, pwr.tmp.gas) #, title = "234")
-
+  if ("Hrs..in.Per." %in% audit.data) {
+    pwr.tmp.gas = qplot(audit.data[,"Hrs..in.Per."], audit.data[,"X.W.SF."], 
+                        main = "Gas", xlab = "Hrs. In Period", ylab = "[W/SF]",
+                        xlim = c(0,1000), color=audit.data[,"X.W.SF."]) +
+                        theme(color="red")
+    pwr.tmp.mplot = multiplot(pwr.tmp.elec, pwr.tmp.gas) #, title = "234")
+  } else {
+      pwr.tmp.elec = qplot(audit.data[,"Hrs..in.Per..1"],
+                           audit.data[,"X.W.SF..1"],
+                           main = "Elec.", xlab = "Hrs. In Period",
+                           ylab = "[W/SF]",
+                           xlim = c(0,1000), color=audit.data[,"X.W.SF..1"])
+                           # + theme(color="blue")
+      pwr.tmp.mplot = pwr.tmp.elec
+  }
   return(pwr.tmp.mplot)
 }
 

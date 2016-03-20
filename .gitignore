@@ -12,3 +12,6 @@ private.py
 .Rproj.user/*
 .cache/*
 .Rproj.user
+*.Rproj
+.Rhistory
+.RData
