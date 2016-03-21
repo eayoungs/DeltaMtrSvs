@@ -91,7 +91,6 @@ def get_model_audits(audit_url, bldgModelsDct, headers):
         modelID = value
         audit_endpt = audit_url +modelID 
         audits[modelID] = requests.get(audit_endpt, headers=headers).json()
-    # TODO (eayoungs): Revise function to return a single object
 
     return audits
 

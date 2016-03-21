@@ -13,7 +13,9 @@ import types as tp
 import re
 import deltamtrsvs
 import amsaves as ams
+
 import private as pvt
+from mock import patch
 
 headers = pvt.headers
 properties_url = pvt.properties_url
@@ -21,6 +23,15 @@ model_url = pvt.model_url
 comparison_url = pvt.comparison_url
 audit_url = pvt.audit_url
 sites = [pvt.FDL, pvt.HJSMS, pvt.Middlesboro]
+
+
+def fake_url_open(url):
+    """ """
+
+    # Map path from URL to local file
+    parsed_url = urlparse(url)
+    resource_file = os.path.normpath('testpropertydata.json' % parsed_url.path)
+    return open(resource_file, mode='rb')
 
 
 def test_get_property_bldgs():
@@ -58,7 +69,6 @@ def test_get_bldg_models():
             for key, value in jsonModelsDct.iteritems():
                 assert type(key) == tp.StringType
                 assert type(value) == tp.DictType
-
 
 
 def test_get_model_comparisons():
