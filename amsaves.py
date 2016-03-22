@@ -142,12 +142,12 @@ def amsaves_usage_range(audits):
 
     auditSpans = {}
     for key, value in audits.iteritems():
+        spanData = {}
+        jsonAudits = value
         elecStart = []
         elecEnd = []
         gasStart = []
         gasEnd = []
-        spanData = {}
-        jsonAudits = value
         for jsonAudit in jsonAudits:
             periodStartDate = str(jsonAudit['PeriodStartDate'])
             periodEndDate = str(jsonAudit['PeriodEndDate'])
@@ -157,19 +157,21 @@ def amsaves_usage_range(audits):
             elif jsonAudit['UnitOfMeasure'] == 'THERM':
                 gasStart.append(periodStartDate)
                 gasEnd.append(periodEndDate)
-
-        elecSpanBegin = min(elecStart)
-        elecSpanEnd = max(elecEnd)
+            # TODO (eayoungs): Add final else statement to raise exception
+        if len(elecStart) > 0:
+            elecSpanBegin = min(elecStart)
+            elecSpanEnd = max(elecEnd)
         if len(gasStart) > 0:
             gasSpanBegin = min(gasStart)
             gasSpanEnd = max(gasEnd)
-            spanData['E. Per. Begin'] = elecSpanBegin
-            spanData['E. Per. End'] = elecSpanEnd
-            spanData['G. Per. Begin'] = gasSpanBegin
-            spanData['G. Per. End'] = gasSpanEnd
-        else:
-            spanData['E. Per. Begin'] = elecSpanBegin
-            spanData['E. Per. End'] = elecSpanEnd
+        else: 
+            gasSpanBegin = 0
+            gasSpanEnd = 0
+
+        spanData['E. Per. Begin'] = elecSpanBegin
+        spanData['E. Per. End'] = elecSpanEnd
+        spanData['G. Per. Begin'] = gasSpanBegin
+        spanData['G. Per. End'] = gasSpanEnd
         auditSpans[key] = spanData
 
     return auditSpans

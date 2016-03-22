@@ -21,7 +21,7 @@ properties_url = pvt.properties_url
 model_url = pvt.model_url
 comparison_url = pvt.comparison_url
 audit_url = pvt.audit_url
-sites = [pvt.Middlesboro]#, pvt.FDL, pvt.HJSMS]
+sites = [pvt.Middlesboro, pvt.FDL, pvt.HJSMS]
 
 
 def test_amsaves_results():
@@ -190,22 +190,16 @@ def test_amsaves_usage_range():
         for key, value in auditSpans.iteritems():
             assert type(key) == tp.StringType
             assert type(value) == tp.DictType
-            vals = []
-            colNms = []
-            if len(auditSpans[key]) == 2:
-                vals = [key, auditSpans[key]['E. Per. Begin'],
-                        auditSpans[key]['E. Per. End']]
-                colNms = ['Ref. Model ID', 'E. Per. Begin', 'E. Per. End']
-            elif len(auditSpans[key]) == 4:
-                vals = [key, auditSpans[key]['E. Per. Begin'],
-                        auditSpans[key]['E. Per. End'],
-                        auditSpans[key]['G. Per. Begin'],
-                        auditSpans[key]['G. Per. End']]
-                colNms = ['Ref. Model ID', 'E. Per. Begin', 'E. Per. End',
-                          'G. Per. Begin', 'G. Per. End']
+            vals = [key, auditSpans[key]['E. Per. Begin'],
+                    auditSpans[key]['E. Per. End'],
+                    auditSpans[key]['G. Per. Begin'],
+                    auditSpans[key]['G. Per. End']]
+            
             # TODO (eayoungs): Add exception handling and include in final
             #                  *else* statement
             spans.append(vals)
+        colNms = ['Ref. Model ID', 'E. Per. Begin', 'E. Per. End',
+                  'G. Per. Begin', 'G. Per. End']
         df = pd.DataFrame(data=spans, columns=colNms)
             
         fname = site +'-use_ranges.csv'
