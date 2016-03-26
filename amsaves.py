@@ -22,7 +22,7 @@ def amsaves_results(comparisonsDct, bldgModelsDct, bldgIDct):
         elecRatio = value['ElectricRatioA']
         gasRatio = value['GasRatioA']
         elecKwhSavings = round(-value['ElectricDifference']*elecRatio, 0)
-        gasThermSavings = round(-value['GasDifference']/29.3072, 0)
+        gasThermSavings = round(-value['GasDifference']/29.3072*gasRatio, 0)
         elecBaseLdKwh = round(value['ModelAValues'][1]*elecRatio + \
                               value['ModelAValues'][3]*elecRatio + \
                               value['ModelAValues'][5]*elecRatio + \
