@@ -30,8 +30,8 @@ def amsaves_results(comparisonsDct, bldgModelsDct, bldgIDct):
         elecClgKwh = round(value['ModelAValues'][0]*elecRatio, 0)
         elecHtgKwh = round(value['ModelAValues'][8]*elecRatio, 0)
         gasSpcHtgTherm = round(value['ModelAValues'][9]/29.3072*gasRatio, 0)
-        gasBaseLd = round((value['ModelAValues'][2]*gasRatio + \
-                           value['ModelAValues'][4]*gasRatio + \
+        gasBaseLd = round((value['ModelAValues'][2] + \
+                           value['ModelAValues'][4] + \
                            value['ModelAValues'][6])/29.3072*gasRatio, 0)
         bldgID = key
         bldg = bldgIDct[key]
