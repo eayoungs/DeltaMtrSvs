@@ -76,20 +76,18 @@ def get_model_comparisons(comparison_url, bldgModelsDct, headers):
 
 
 def get_model_audits(audit_url, bldgModelsDct, headers):
-    """ Pass a list of model IDs; return audit IDs and a list of audit data
-        objects in .JSON format. """
+    """ Pass a dictionary of building models; return a dictionary of audit
+        models with model IDs as keys """
 
-    bldgModelsDct = {}
+    modelsIdDct = {}
     for key, value in bldgModelsDct.iteritems():
         bldgID = key
-        jsonModelsDct = value
-        for key, value in jsonModelsDct.iteritems():
-            bldgModelsDct[bldgID] = str(value['SolutionID'])
+        modelsIdDct[key] = str(value['SolutionID'])
 
     audits = {}
-    for key, value in bldgModelsDct:
+    for key, value in modelsIdDct.iteritems():
         modelID = value
-        audit_endpt = audit_url +modelID 
+        audit_endpt = audit_url + modelID 
         audits[modelID] = requests.get(audit_endpt, headers=headers).json()
 
     return audits

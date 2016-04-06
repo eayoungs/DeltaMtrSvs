@@ -14,8 +14,11 @@ import re
 import deltamtrsvs
 import amsaves as ams
 
+import os.path
+from urlparse import urlparse
+
 import private as pvt
-from mock import patch
+
 
 headers = pvt.headers
 properties_url = pvt.properties_url
@@ -23,16 +26,6 @@ model_url = pvt.model_url
 comparison_url = pvt.comparison_url
 audit_url = pvt.audit_url
 sites = [pvt.FDL, pvt.HJSMS, pvt.Middlesboro]
-
-
-def fake_url_open(url):
-    """ """
-
-    # Map path from URL to local file
-    parsed_url = urlparse(url)
-    resource_file = os.path.normpath('testpropertydata.json' % parsed_url.path)
-    return open(resource_file, mode='rb')
-
 
 def test_get_property_bldgs():
     """ Pass an API URL, property id & header; confirm the fuction returns the
@@ -109,18 +102,16 @@ def test_get_model_audits():
         refModelsDct = {}
         for key, value in bldgModelsDct.iteritems():
             refModelsDct[key] = value['Reference Model']
-
-        comparisonsDct = deltamtrsvs.get_model_comparisons(comparison_url,
-                                                           bldgModelsDct,
-                                                           headers)
+        
+        print(refModelsDct.keys())
         audits = deltamtrsvs.get_model_audits(audit_url, refModelsDct,
                                               headers)
+        print(audits.keys())
         type(audits) == tp.DictType
         for key, values in audits.iteritems():
             assert re.match('\d{3}', key)
             assert type(values) == tp.ListType
-            assert [type(value) == tp.DictType for value in \
-                    values]
+            assert [type(value) == tp.DictType for value in values]
 
 
 def test_get_fv_charts():

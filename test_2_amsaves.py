@@ -77,10 +77,8 @@ def test_amsaves_audit():
         for key, value in bldgModelsDct.iteritems():
             refModelsDct[key] = value['Reference Model']
                 
-        comparisonsDct = deltamtrsvs.get_model_comparisons(comparison_url,
-                                                           bldgModelsDct,
-                                                           headers)
-        audits = deltamtrsvs.get_model_audits(audit_url, refModelsDct, headers)
+        audits = deltamtrsvs.get_model_audits(audit_url, refModelsDct,
+                                              headers)
         combinedUsageDct = ams.amsaves_audit(audits)
 
         assert isinstance(combinedUsageDct, dict)
@@ -88,11 +86,15 @@ def test_amsaves_audit():
 
         for key, value in combinedUsageDct.iteritems():
             df = value
+            print(df)
+            assert type(key) == tp.StringType
+            assert re.match('\d{3}', key)
             assert isinstance(value, pd.DataFrame)
+            #assert df.shape[1] == 14
             fname = key + '-audit.csv'
             with open(fname, 'wb') as outf:
                 outcsv = df.to_csv(fname)
-
+test_amsaves_audit()
 
 def test_amsaves_flags():
     """ """
