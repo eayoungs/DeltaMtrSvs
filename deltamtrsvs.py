@@ -81,7 +81,6 @@ def get_model_audits(audit_url, bldgModelsDct, headers):
 
     modelsIdDct = {}
     for key, value in bldgModelsDct.iteritems():
-        bldgID = key
         modelsIdDct[key] = str(value['SolutionID'])
 
     audits = {}

@@ -175,15 +175,11 @@ def test_amsaves_usage_range():
 
         bldgModelsDct = deltamtrsvs.get_bldg_models(model_url, bldgIDs,
                                                 headers)
-        refModelIDs = []
+        refModelsDct = {}
         for key, value in bldgModelsDct.iteritems():
-            refModel = value['Reference Model']
-            refModelIDs.append(str(refModel['SolutionID']))
+            refModelsDct[key] = value['Reference Model']
                 
-        comparisonsDct = deltamtrsvs.get_model_comparisons(comparison_url,
-                                                           bldgModelsDct,
-                                                           headers)
-        audits = deltamtrsvs.get_model_audits(audit_url, refModelIDs, headers)
+        audits = deltamtrsvs.get_model_audits(audit_url, refModelsDct, headers)
         auditSpans = ams.amsaves_usage_range(audits)
         assert type(auditSpans) == tp.DictType
         # assert len(auditSpans) == len(refModelIDs)
