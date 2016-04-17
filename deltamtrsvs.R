@@ -27,21 +27,21 @@ DmsFmatAudit <- function(f.names){
   #   file.
   
   # f.names = c(read.table(fname_list, sep="\n", stringsAsFactors = FALSE))
-  audit.data.lst = list()
+  #audit.data.lst = list()
   for(i in 1:length(f.names)){
     audit.data = read.csv(f.names[i], header = TRUE, stringsAsFactors = FALSE)
     
     audit.data$Per..Start = as.Date(audit.data$Per..Start)
     audit.data$Per..End = as.Date(audit.data$Per..End)
-    audit.data$Per..Start.1 = as.Date(audit.data$Per..Start.1)
-    audit.data[["CalMo"]] = month(audit.data$Per..Start.1, label = TRUE)
-    audit.data$Per..End.1 = as.Date(audit.data$Per..End.1)
+    audit.data[["CalMo"]] = month(audit.data$Per..Start, label = TRUE)
+    #audit.data$Per..Start.1 = as.Date(audit.data$Per..Start.1)
+    #audit.data$Per..End.1 = as.Date(audit.data$Per..End.1)
 
     audit.data = audit.data[order(audit.data$CalMo),]
-    audit.data.lst[[i]] <- audit.data
+    audit.data <- audit.data
     # write.csv(audit.data.lst[i], paste("out-", f.names[i]))
   }
-  return(audit.data.lst[1])
+  return(audit.data)
 }
 
 DmsPlotUsePer <- function(df.name){
@@ -52,19 +52,19 @@ DmsPlotUsePer <- function(df.name){
   #   df.name: 
   # Returns:
   #   pwr.tmp.mplot: 
-  audit.data = read.csv(df.name, header = TRUE, stringsAsFactors = FALSE)
-  if ("Hrs..in.Per." %in% audit.data) {
-    pwr.tmp.gas = qplot(audit.data[,"Hrs..in.Per."], audit.data[,"X.W.SF."], 
+  audit.data = df.name #read.csv(df.name, header = TRUE, stringsAsFactors = FALSE)
+  if ("Units.1" %in% audit.data) {
+    pwr.tmp.gas = qplot(audit.data[,"Hrs..in.Per.1"], audit.data[,"X.W.SF.1"], 
                         main = "Gas", xlab = "Hrs. In Period", ylab = "[W/SF]",
                         xlim = c(0,1000), color=audit.data[,"X.W.SF."]) +
                         theme(color="red")
     pwr.tmp.mplot = multiplot(pwr.tmp.elec, pwr.tmp.gas) #, title = "234")
   } else {
-      pwr.tmp.elec = qplot(audit.data[,"Hrs..in.Per..1"],
-                           audit.data[,"X.W.SF..1"],
+      pwr.tmp.elec = qplot(audit.data[,"Hrs..in.Per.."],
+                           audit.data[,"X.W.SF."],
                            main = "Elec.", xlab = "Hrs. In Period",
                            ylab = "[W/SF]",
-                           xlim = c(0,1000), color=audit.data[,"X.W.SF..1"])
+                           xlim = c(0,1000), color=audit.data[,"X.W.SF.."])
                            # + theme(color="blue")
       pwr.tmp.mplot = pwr.tmp.elec
   }

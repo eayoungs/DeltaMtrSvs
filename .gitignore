@@ -5,7 +5,10 @@
 
 # Sublime Text filz
 *.sublime-*
+
+# Python files
 *.pyc
+.ipynb_checkpoints/*
 
 # Hidden working files
 private.py

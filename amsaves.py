@@ -11,6 +11,7 @@ __license__ = "GNU Affero (GPLv3)"
 from collections import defaultdict
 import pandas as pd
 import requests
+import datetime
 
 
 def amsaves_results(comparisonsDct, bldgModelsDct, bldgIDct):
@@ -73,8 +74,12 @@ def amsaves_audit(audits):
         for jsonAudit in jsonAudits:
             values = jsonAudit['TotalUnitsUsed']
             unitOfMeasure = jsonAudit['UnitOfMeasure']
-            periodStartDate = str(jsonAudit['PeriodStartDate'])
-            periodEndDate = str(jsonAudit['PeriodEndDate'])
+            periodStartDate = \
+                       datetime.datetime.strptime(jsonAudit['PeriodStartDate'],
+                                                  '%Y-%m-%dT%H:%M:%S').date()
+            periodEndDate = \
+                         datetime.datetime.strptime(jsonAudit['PeriodEndDate'],
+                                                    '%Y-%m-%dT%H:%M:%S').date()
             hrsInPeriod = jsonAudit['DaysInPeriod']*24
             pwrDensity = jsonAudit['ElecWattsPerFt2']
             airTemp = jsonAudit['AirTemp']
