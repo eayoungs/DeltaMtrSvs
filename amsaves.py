@@ -73,7 +73,6 @@ def amsaves_audit(audits):
         jsonAudits = value
         for jsonAudit in jsonAudits:
             values = jsonAudit['TotalUnitsUsed']
-            unitOfMeasure = jsonAudit['UnitOfMeasure']
             periodStartDate = \
                        datetime.datetime.strptime(jsonAudit['PeriodStartDate'],
                                                   '%Y-%m-%dT%H:%M:%S').date()
@@ -84,22 +83,22 @@ def amsaves_audit(audits):
             pwrDensity = jsonAudit['ElecWattsPerFt2']
             airTemp = jsonAudit['AirTemp']
             if jsonAudit['UnitOfMeasure'] == 'KWH':
-                elecUsage.append([values, unitOfMeasure, pwrDensity,
-                                 periodStartDate, periodEndDate, hrsInPeriod,
-                                 airTemp])
+                elecUsage.append([values, pwrDensity, periodStartDate,
+                                  periodEndDate, hrsInPeriod, airTemp])
+                elecNames = ['[kWh/Mo.]', 'Elec. [W/SF]', 'Per. Start',
+                         'Per. End', 'Hrs. in Per.', 'Air Temp']
             elif jsonAudit['UnitOfMeasure'] == 'THERM':
-                gasUsage.append([values, unitOfMeasure, pwrDensity,
-                                periodStartDate, periodEndDate, hrsInPeriod,
-                                airTemp])
+                gasUsage.append([values, pwrDensity, periodStartDate,
+                                 periodEndDate, hrsInPeriod, airTemp])
+                gasNames = ['[Therms/Mo.]', 'Gas [W/SF]', 'Per. Start',
+                         'Per. End', 'Hrs. in Per.', 'Air Temp']
 
         # TODO (eayoungs): Move data frame construction to test function; stick
         #                  deltameterservices.com structure, filter & , per
         #                  amsaves_flags()
-        names = ['[kWh/Mo.]', 'Units', '[W/SF]', 'Per. Start', 'Per. End',
-                 'Hrs. in Per.', 'Air Temp']
-        elecUsageDf = pd.DataFrame(data=elecUsage, columns=names)
+        elecUsageDf = pd.DataFrame(data=elecUsage, columns=elecNames)
         if gasUsage:
-            gasUsageDf = pd.DataFrame(data=gasUsage, columns=names)
+            gasUsageDf = pd.DataFrame(data=gasUsage, columns=gasNames)
             combinedUsageDf = pd.concat([elecUsageDf, gasUsageDf], axis=1)
             combinedUsageDct[key] = combinedUsageDf
         else: combinedUsageDct[key] = elecUsageDf
